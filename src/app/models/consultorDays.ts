@@ -1,9 +1,8 @@
-import { UserCon } from "./userCon";
+import { SlotDtoList } from "./slotDtoList";
 
-export class Consultor extends UserCon{
-  userId:number;
-  spe_id:number;
-  speDescription: string;
+export class ConsultorDays {
+  con_id:number;
+  slotDtoList:SlotDtoList[];
   
   status: string;
   statusDescription:string;

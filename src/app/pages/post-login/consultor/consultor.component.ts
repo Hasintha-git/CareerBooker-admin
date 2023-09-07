@@ -172,7 +172,7 @@ export class ConsultorComponent implements OnInit, OnDestroy {
   }
 
   add() {
-    const dialogRef = this.dialog.open(ConsultorOnboardingComponent, { width: '80%', height: '450px' });
+    const dialogRef = this.dialog.open(ConsultorOnboardingComponent, { width: '80%', height: '475px' });
     dialogRef.componentInstance.statusList = this.statusList;
     dialogRef.componentInstance.specializationList = this.specializationList;
     dialogRef.componentInstance.timeSlotList = this.timeSlotList;
