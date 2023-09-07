@@ -21,6 +21,11 @@ import {MatSnackBarModule} from '@angular/material/snack-bar';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import { NgxSpinnerModule } from "ngx-spinner";
 import { ToastrModule } from 'ngx-toastr';
+import { MatDialogModule } from '@angular/material/dialog';
+import {MatDatepickerModule} from '@angular/material/datepicker';
+import {MatToolbarModule} from '@angular/material/toolbar';
+import {MatStepperModule} from '@angular/material/stepper';
+import { MatChipsModule } from '@angular/material/chips';
 
 @NgModule({
   declarations: [
@@ -41,15 +46,16 @@ import { ToastrModule } from 'ngx-toastr';
     MatMenuModule,
     MatCheckboxModule,
     MatInputModule,
-    ReactiveFormsModule,
-    MatNativeDateModule,
-    FormsModule,
-    MatInputModule,
     MatRadioModule,
     HttpClientModule,
     MatSnackBarModule,
     MatProgressSpinnerModule,
     NgxSpinnerModule,
+    MatDatepickerModule,
+    MatToolbarModule,
+    MatDialogModule,
+    MatStepperModule,
+    MatChipsModule,
     ToastrModule.forRoot({
       timeOut: 5000, // 5 seconds
   positionClass: 'toast-top-right',

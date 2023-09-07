@@ -17,6 +17,8 @@ export class SignUpComponent implements OnInit {
   signUpModel = new User();
   userForm: FormGroup;
   hide = true;
+  isNext: string;
+
 
   constructor(
     private toastr: ToastServiceService,
@@ -27,15 +29,39 @@ export class SignUpComponent implements OnInit {
     ) { }
 
   ngOnInit(): void {
+    this.isNext = '1';
     this.initialValidator()
   }
   initialValidator() {
   this.userForm = this.formBuilder.group({
-    first_name : this.formBuilder.control('', [Validators.required]),
-    // last_name : this.formBuilder.control('', [Validators.required]),
+    username : this.formBuilder.control('', [Validators.required]),
+    fullName : this.formBuilder.control('', [Validators.required]),
+    nic : this.formBuilder.control('', [Validators.required]),
     email : this.formBuilder.control('', [Validators.required]),
-    password : this.formBuilder.control('', [Validators.required])
+    mobileNo : this.formBuilder.control('', [Validators.required]),
+    dateOfBirth : this.formBuilder.control('', [Validators.required]),
+    address : this.formBuilder.control('', [Validators.required]),
+    city : this.formBuilder.control('', [Validators.required]),
+    statusCode : this.formBuilder.control('', [Validators.required]),
+    password : this.formBuilder.control('', [Validators.required]),
+    confirmPassword : this.formBuilder.control('', [Validators.required])
   });
+  }
+
+  firstTab() {
+    this.isNext = '1';
+  }
+
+  secondTab() {
+    this.isNext = '2';
+  }
+
+  threeTab() {
+    this.isNext = '3';
+  }
+
+  login() {
+    this.routerLink.navigateByUrl('/login')
   }
 
   onSubmit() {
@@ -78,13 +104,10 @@ export class SignUpComponent implements OnInit {
     }
   }
 
-  get first_name() {
-    return this.userForm.get('first_name');
+  get username() {
+    return this.userForm.get('username');
   }
 
-  get last_name() {
-    return this.userForm.get('last_name');
-  }
 
   get email() {
     return this.userForm.get('email');

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
+import { StorageService } from 'src/app/models/StorageService';
 import { SessionService } from 'src/app/services/session/session-service.service';
 
 @Component({
@@ -13,9 +14,12 @@ export class PostLoginComponent implements OnInit {
   contentMargin = 240;
   activeRouter = "Dashboard";
   isSurveyShareEnble: boolean;
+public access: any;
 
-
-  constructor(private router: Router, private dialog: MatDialog,private sessionService: SessionService) {
+  constructor(private router: Router, 
+    private dialog: MatDialog,
+    private sessionService: SessionService,
+    private sessionStorage: StorageService) {
     this.sessionTimeOutSet();
     this.isSurveyShareEnble = true;
     this.router.events.subscribe((event) => {
@@ -43,8 +47,8 @@ export class PostLoginComponent implements OnInit {
     if (rout=='dashboard') {
       this.activeRouter = 'Dashboard';
       this.isSurveyShareEnble = false;
-    }else if (rout=='employee-analytics') {
-      this.activeRouter = 'Employee Analytics'
+    }else if (rout=='user') {
+      this.activeRouter = 'User Management'
       this.isSurveyShareEnble = true;
     } else if (rout ==='employee-analytics/employee-profile') {
       this.activeRouter = 'Employee Analytics > Employee Profile'
@@ -59,6 +63,7 @@ export class PostLoginComponent implements OnInit {
     }
   }
   ngOnInit(): void {
+    this.access=this.sessionStorage.getItem("userrole");
   }
 
   onMenuToggle() {

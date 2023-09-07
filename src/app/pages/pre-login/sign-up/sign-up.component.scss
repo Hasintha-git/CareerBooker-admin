@@ -23,7 +23,7 @@
         width: 400px;
         height: 600px;
         border-radius: 20px;
-        border: 1px solid  rgb(196, 196, 196);
+        box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
         display: flex;
         justify-content: center;
         flex-direction: column;
@@ -31,24 +31,14 @@
         overflow: hidden;
     }
 
-    .login-side1-row-title {
-        display: flex;
-        height: 70px;
-        width: 100%;
-        justify-content: center;
-        align-items: flex-end;
-        .welcome {
-            font-family: "Poppins", sans-serif;
-            font-size: 18px;
-            font-weight: bold;
-        }
-    }
+
     .login-side1-row {
         display: flex;
         height: 50px;
-        width: 100%;
+        width: 88%;
         justify-content: center;
         align-items: flex-end;
+        justify-content: space-between;
 
         .login-side1-row-logo {
             width: 120px;
@@ -67,7 +57,7 @@
                 cursor: pointer;
             }
             .txt_register {
-                color: #0096FE;
+                color: #1877F2;
 
                 & :hover {
                     cursor: pointer;
@@ -78,11 +68,32 @@
         .input-field {
             outline: 1px solid transparent;
         }
+        .btn-first {
+            width: 100%;
+          background-color: #1877F2;
+          color:white;
+          border-radius: 20px;
+        }
 
         .btn-login {
-            width: 350px;
-          background-color: #75AFEB;
-          color:white
+            width: 150px;
+          background-color: #1877F2;
+          color:white;
+          border-radius: 20px;
+        }
+
+        .route-login {
+            width: 100%;
+            background-color: #E2E2E264;
+            color:black;
+            border-radius: 20px;
+        }
+
+        .btn-back {
+            width: 150px;
+          background-color: brown;
+          color:#fff;
+          border-radius: 20px;
         }
     }
     .ultra-max-field {
@@ -103,7 +114,18 @@
         flex-direction: row;
     }
 }
-
+.login-side1-row-title {
+    display: flex;
+    height: 70px;
+    width: 100%;
+    justify-content: center;
+    align-items: flex-end;
+    .welcome {
+        font-family: "Poppins", sans-serif;
+        font-size: 18px;
+        font-weight: bold;
+    }
+}
 // >>>>> Mobile responsive
 
 @media screen and (max-width: 1000px) {

@@ -21,27 +21,33 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { MatInputModule } from '@angular/material/input';
 import {MatRadioModule} from '@angular/material/radio';
 import {ClipboardModule} from '@angular/cdk/clipboard';
-import { CustomerManagementComponent } from './customer-management/customer-management.component';
-import { FoodcityManagementComponent } from './foodcity-management/foodcity-management.component';
-import { BiteManagementComponent } from './bite-management/bite-management.component';
-import { PendingOrderComponent } from './pending-order/pending-order.component';
-import { ApprovedOrderComponent } from './approved-order/approved-order.component';
-import { DeliveredOrderComponent } from './delivered-order/delivered-order.component';
-import { TrendingItemComponent } from './trending-item/trending-item.component';
-import { CategoryManagementComponent } from './category-management/category-management.component';
 import {MatExpansionModule} from '@angular/material/expansion';
+import {MatPaginatorModule} from '@angular/material/paginator';
+import { UserComponent } from './user/user.component';
+import { RegexFormateModule } from 'src/app/utility/directive/regex-formate.module';
+import { Empty } from 'src/app/utility/pipes/empty';
+import { ViewUserComponent } from './user/view-user/view-user.component';
+import { AddUserComponent } from './user/add-user/add-user.component';
+import { EditUserComponent } from './user/edit-user/edit-user.component';
+import { DeleteUserComponent } from './user/delete-user/delete-user.component';
+import {MatDatepickerModule} from '@angular/material/datepicker';
+import { ConsultorComponent } from './consultor/consultor.component';
+import { ConsultorOnboardingComponent } from './consultor/consultor-onboarding/consultor-onboarding.component';
+import { MatStepperModule } from '@angular/material/stepper';
+import { MatFormFieldModule } from '@angular/material/form-field';
+
 @NgModule({
   declarations: [
     PostLoginComponent,
     DashboardComponent,
-    CustomerManagementComponent,
-    FoodcityManagementComponent,
-    BiteManagementComponent,
-    PendingOrderComponent,
-    ApprovedOrderComponent,
-    DeliveredOrderComponent,
-    TrendingItemComponent,
-    CategoryManagementComponent,
+    UserComponent,
+    Empty,
+    ViewUserComponent,
+    AddUserComponent,
+    EditUserComponent,
+    DeleteUserComponent,
+    ConsultorComponent,
+    ConsultorOnboardingComponent
   ],
   imports: [
     CommonModule,
@@ -64,7 +70,17 @@ import {MatExpansionModule} from '@angular/material/expansion';
     MatInputModule,
     MatRadioModule,
     ClipboardModule,
-    MatExpansionModule
-  ]
+    MatExpansionModule,
+    MatPaginatorModule,
+    RegexFormateModule,
+    MatDialogModule,
+    FormsModule,
+    MatDatepickerModule,
+    MatStepperModule,
+    MatFormFieldModule
+  ],
+  exports: [
+    Empty
+  ],
 })
 export class PostLoginModule { }

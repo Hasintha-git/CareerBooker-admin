@@ -21,7 +21,14 @@ export class SignInComponent implements OnInit {
   hide = true;
   signInModel = new User();
   userForm: FormGroup;
-  constructor(private toastr: ToastServiceService,private spinner: NgxSpinnerService,private sessionService: SessionService,private _snackBar: MatSnackBar,private routerLink: Router, private formBuilder: FormBuilder,private userService: UserService, private sessionStorage: StorageService) { }
+  constructor(private toastr: ToastServiceService,
+    private spinner: NgxSpinnerService,
+    private sessionService: SessionService,
+    private _snackBar: MatSnackBar,
+    private routerLink: Router, 
+    private formBuilder: FormBuilder,
+    private userService: UserService, 
+    private sessionStorage: StorageService) { }
 
   ngOnInit(): void {
 
@@ -34,7 +41,7 @@ export class SignInComponent implements OnInit {
 
   initialValidator() {
     this.userForm = this.formBuilder.group({
-      email: this.formBuilder.control('', [Validators.required]),
+      username: this.formBuilder.control('', [Validators.required]),
       password: this.formBuilder.control('', [Validators.required])
     });
   }
@@ -42,27 +49,29 @@ export class SignInComponent implements OnInit {
 onSubmit() {    
   this.spinner.show();
     if (this.userForm.valid) {
-      this.signInModel.last_name="";
-      // this.userService.userLogin(this.signInModel).subscribe((userResponse: any)=> {
-      //     this.sessionStorage.setItem("user",userResponse.data);
+      this.userService.userLogin(this.signInModel).subscribe((userResponse: any)=> {
+          this.sessionStorage.setItem("user",userResponse.data);
           this.routerLink.navigateByUrl('/post-login')
           this.spinner.hide();
 
-        // if(userResponse.data != null) {
-        //   this.sessionStorage.setItem("user",userResponse.data);
-        //   this.routerLink.navigateByUrl('/post-login')
+        if(userResponse.data != null) {
+          this.sessionStorage.setItem("user",userResponse.data);
+          this.sessionStorage.setItem("token",userResponse.data.jwt);
+          this.sessionStorage.setItem("userrole",userResponse.data.user.userRole.code);
+          this.routerLink.navigateByUrl('/post-login')
 
-        // }
-    //   },
-    //   error => {
-    //     this.spinner.hide();
-    //     this.toastr.errorMessage(error);
-    //   }
-    //   )
-    // } else {
-    //   this.toastr.errorMessage('Please fill in all required fields');
-    //   this.spinner.hide();
-    //   this.mandatoryValidation(this.userForm)
+
+        }
+      },
+      error => {
+        this.spinner.hide();
+        this.toastr.errorMessage(error.error['errorDescription']);
+      }
+      )
+    } else {
+      this.toastr.errorMessage('Please fill in all required fields');
+      this.spinner.hide();
+      this.mandatoryValidation(this.userForm)
     }
   }
 
@@ -85,8 +94,8 @@ onSubmit() {
     this.routerLink.navigateByUrl('/register')
   }
 
-  get email() {
-    return this.userForm.get('email');
+  get username() {
+    return this.userForm.get('username');
   }
 
   get password() {

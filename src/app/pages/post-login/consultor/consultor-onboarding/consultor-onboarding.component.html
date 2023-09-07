@@ -1,0 +1,138 @@
+<div class="btn-close" (click)="closeDialog()">
+</div>
+<mat-stepper linear #stepper>
+  <mat-step [editable]="isEditable">
+    <form (ngSubmit)="userFind()" [formGroup]="firstFormGroup">
+      <ng-template matStepLabel>Fill out NIC</ng-template>
+      <div style="display: flex;align-items: center;height: 55px; ">
+        <div class="input-fields" style="height: 45px; ">
+          <mat-form-field class="min-field" appearance="outline">
+            <mat-label>NIC</mat-label>
+            <input matInput [formControl]="nic" [maxlength]="12" autoComplete='off' [(ngModel)]="searchNic"
+              appRegexFormate regexType="letter_num" required>
+            <mat-error *ngIf="nic.hasError('required')">NIC cannot be
+              empty
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div>
+          <button type="submit" mat-button class="custom-button primary">Check</button>
+        </div>
+      </div>
+
+    </form>
+    <br>
+    <div class="dialog-input-fields">
+      <div class="view-data">
+        <label for="Username" class="label">Username</label>
+        <p title="{{userModel.username | empty}}" class="data">{{userModel.username | empty}}</p>
+      </div>
+      <div class="view-data">
+        <label for="Username" class="label">Full Name</label>
+        <p title="{{userModel.fullName | empty}}" class="data">{{userModel.fullName | empty}}</p>
+      </div>
+      <div class="view-data">
+        <label for="User Role" class="label">User Role</label>
+        <p title="{{userModel.userRoleDescription | empty}}" class="data">{{userModel.userRoleDescription | empty}}</p>
+      </div>
+      <div class="view-data">
+        <label for="NIC" class="label">NIC</label>
+        <p title="{{userModel.nic | empty}}" class="data">{{userModel.nic | empty}}</p>
+      </div>
+      <div class="view-data">
+        <label for="Date of Birth" class="label">Date of Birth</label>
+        <p title="{{userModel.dateOfBirth | empty}}" class="data">{{userModel.dateOfBirth | empty}}</p>
+      </div>
+      <div class="view-data">
+        <label for="Status" class="label">Status</label>
+        <p title="{{userModel.status | empty}}" class="data">{{userModel.status | empty}}</p>
+      </div>
+      <div class="view-data">
+        <label for="Email" class="label">Email</label>
+        <p title="{{userModel.email | empty}}" class="data">{{userModel.email | empty}}</p>
+      </div>
+      <div class="view-data">
+        <label for="Contact Number" class="label">Contact Number</label>
+        <p title="{{userModel.mobileNo | empty}}" class="data">{{userModel.mobileNo | empty}}</p>
+      </div>
+      <div class="view-data">
+        <label for="Address" class="label">Address</label>
+        <p title="{{userModel.address | empty}}" class="data">{{userModel.address | empty}}</p>
+      </div>
+      <div class="view-data">
+        <label for="City" class="label">City</label>
+        <p title="{{userModel.city | empty}}" class="data">{{userModel.city | empty}}</p>
+      </div>
+    </div>
+
+
+    <div style="width: 100%; display: flex;justify-content: flex-end;">
+      <button [disabled]="!isUserChecked" type="button" mat-button class="custom-button primary" (click)="secondScreen()">Next</button>
+    </div>
+
+  </mat-step>
+  <mat-step [editable]="isEditable">
+
+
+<p>Pick available Dates </p>
+    <button mat-icon-button [matMenuTriggerFor]="appMenu">
+      <mat-icon matTooltip="Calendar">calendar_today</mat-icon>
+    </button>
+    
+    <mat-menu #appMenu="matMenu" class="drop-calendar">
+      <div (click)="$event.stopPropagation()">
+        <mat-calendar #calendar (selectedChange)="select($event, calendar)" [dateClass]="isSelected"></mat-calendar>
+      </div>
+    </mat-menu>
+
+
+    <div style="width: 100%; display: flex; flex-wrap: wrap; gap: 8px;">
+      <mat-chip
+        class="example-box"
+        cdkDrag
+        *ngFor="let date of daysSelected">
+        {{ date }}
+      </mat-chip>
+    </div>
+    
+<hr>
+<br>
+
+    <form [formGroup]="secondFormGroup">
+      <ng-template matStepLabel>Fill out your address</ng-template>
+      <div class="input-fields">
+        <mat-form-field class="min-field " appearance="outline">
+          <mat-label>Time Slot</mat-label>
+          <mat-select [formControl]="slot" [(ngModel)]="selectedSlotList" multiple>
+            <mat-option *ngFor="let st of timeSlotList" [value]="st.code">
+              {{st.description}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div>
+        <button mat-button matStepperPrevious>Back</button>
+        <button mat-button matStepperNext>Next</button>
+      </div>
+    </form>
+  </mat-step>
+  <mat-step>
+    <ng-template matStepLabel>Done</ng-template>
+    <p>You are now done.</p>
+    <div>
+      <button mat-button matStepperPrevious>Back</button>
+      <button mat-button (click)="stepper.reset()">Reset</button>
+    </div>
+  </mat-step>
+</mat-stepper>
+
+
+<div style="width: 100%; display: flex; flex-wrap: wrap; gap: 8px;">
+  <mat-chip
+    class="example-box"
+    cdkDrag
+    *ngFor="let date of daysSelected">
+    {{ date }}
+    <p *ngFor="let slot of selectedSlotList">{{slot}}</p>
+  </mat-chip>
+</div>

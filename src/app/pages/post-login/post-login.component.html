@@ -6,7 +6,7 @@
         <mat-list id="menus">
             <mat-card class="mat-elevation-z0">
                 <mat-card-header style="display: flex;justify-content: center;">
-                    <img class="post-login-logo" src="../../../assets/images/bimbiya-logo.png" routerLink="/post-login/dashboard"  alt="">
+                    <img class="post-login-logo" src="../../../assets/images/careerbooker.png" routerLink="/post-login/dashboard"  alt="">
                 </mat-card-header>
             </mat-card>
             <mat-list>
@@ -15,97 +15,42 @@
                     <span class="txt_route">Dashboard</span>
                 </button>
             </mat-list>
-            <!-- <mat-list>
-                <button routerLink="customer-management" routerLinkActive="activated-route" class="menu-item"
-                    mat-flat-button>
-                  <img class="menu_img" src="../../../assets/icons/manage_accounts_FILL0_wght400_GRAD0_opsz48.svg">
-
-                  <span class="txt_route">Customer Management</span>
-                </button>
-            </mat-list>
+           
             <mat-list>
-                <button routerLink="foodcity-management" routerLinkActive="activated-route" class="menu-item"
-                    mat-flat-button>
-                  <img class="menu_img" src="../../../assets/icons/food_bank_FILL0_wght400_GRAD0_opsz48.svg">
+              <button routerLink="schedule" routerLinkActive="activated-route" class="menu-item" mat-flat-button>
+                <mat-icon>schedule</mat-icon>
+                  <span class="txt_route">Schedules</span>
+              </button>
+          </mat-list>
 
-                  <span class="txt_route">Foodcity Management</span>
-                </button>
-            </mat-list>
-            <mat-list>
-                <button routerLink="bite-management" routerLinkActive="activated-route" class="menu-item"
-                    mat-flat-button>
-                  <img class="menu_img" src="../../../assets/icons/set_meal_FILL0_wght400_GRAD0_opsz48.svg">
+          <mat-list>
+            <button routerLink="schedule" routerLinkActive="activated-route" class="menu-item" mat-flat-button>
+              <mat-icon>local_library</mat-icon>
+                <span class="txt_route">Available Dates</span>
+            </button>
+        </mat-list>
 
-                  <span class="txt_route">Bite Management</span>
-                </button>
-            </mat-list> -->
-            <!-- <mat-list>
-                <button routerLink="pending-order" routerLinkActive="activated-route" class="menu-item"
-                    mat-flat-button>
-                  <img class="menu_img" src="../../../assets/icons/inactive_order_FILL0_wght400_GRAD0_opsz48.svg">
+        <mat-list>
+          <button routerLink="user" *ngIf= "access == 'admin'" routerLinkActive="activated-route" class="menu-item" mat-flat-button>
+            <mat-icon>people</mat-icon>
+              <span class="txt_route">System user</span>
+          </button>
+      </mat-list>
 
-                  <span class="txt_route">Pending Order</span>
-                </button>
-            </mat-list>
-            <mat-list>
-                <button routerLink="approved-order" routerLinkActive="activated-route" class="menu-item"
-                    mat-flat-button>
-                  <img class="menu_img" src="../../../assets/icons/order_play_FILL0_wght400_GRAD0_opsz48.svg">
+      <mat-list>
+        <button routerLink="consultor"  routerLinkActive="activated-route" class="menu-item" mat-flat-button>
+          <mat-icon>support_agent</mat-icon>
+            <span class="txt_route">Consultant</span>
+        </button>
+    </mat-list>
 
-                  <span class="txt_route">Approved Order</span>
-                </button>
-            </mat-list>
-            <mat-list>
-                <button routerLink="delivered-order" routerLinkActive="activated-route" class="menu-item"
-                    mat-flat-button>
-                  <img class="menu_img" src="../../../assets/icons/order_approve_FILL0_wght400_GRAD0_opsz48.svg">
-
-                  <span class="txt_route">Delivered Order</span>
-                </button>
-            </mat-list> -->
-            <!-- <mat-list>
-                <button routerLink="trending-item" routerLinkActive="activated-route" class="menu-item"
-                    mat-flat-button>
-                  <img class="menu_img" src="../../../assets/icons/trending_up_FILL0_wght400_GRAD0_opsz48.svg">
-
-                  <span class="txt_route">Trending Item</span>
-                </button>
-            </mat-list> -->
-            <!-- <mat-list>
-                <button routerLink="category-management" routerLinkActive="activated-route" class="menu-item"
-                    mat-flat-button>
-                  <img class="menu_img" src="../../../assets/icons/category_FILL0_wght400_GRAD0_opsz48.svg">
-
-                  <span class="txt_route">Category Management</span>
-                </button>
-            </mat-list> -->
-            <mat-expansion-panel style="width: 95%; border-top-right-radius: 50px; border-bottom-right-radius: 50px;box-shadow: none;margin-top: 20px;">
-                <mat-expansion-panel-header>
-                    
-                  <mat-panel-title>
-                    <mat-icon>list_alt</mat-icon>
-                  </mat-panel-title>
-
-                  <mat-panel-description>
-                    Order Management
-                  </mat-panel-description>
-
-                </mat-expansion-panel-header>
-                    <button routerLink="pending-order" routerLinkActive="activated-route" class="menu-item"
-                        mat-flat-button>
-                      <span class="txt_route">Pending Order</span>
-                    </button>
-                    <button routerLink="approved-order" routerLinkActive="activated-route" class="menu-item"
-                        mat-flat-button>
-                      <span class="txt_route">Approved Order</span>
-                    </button>
-                    <button routerLink="delivered-order" routerLinkActive="activated-route" class="menu-item"
-                        mat-flat-button>
-                      <span class="txt_route">Delivered Order</span>
-                    </button>
-              </mat-expansion-panel>
-
-            <mat-expansion-panel style="width: 95%; border-top-right-radius: 50px; border-bottom-right-radius: 50px;box-shadow: none;margin-top: 20px;">
+    <mat-list>
+      <button routerLink="appoinment"  routerLinkActive="activated-route" class="menu-item" mat-flat-button>
+        <mat-icon>event_note</mat-icon>
+          <span class="txt_route">Appoinment</span>
+      </button>
+  </mat-list>
+            <!-- <mat-expansion-panel style="width: 95%; border-top-right-radius: 50px; border-bottom-right-radius: 50px;box-shadow: none;margin-top: 20px;">
                 <mat-expansion-panel-header>
                     
                   <mat-panel-title>
@@ -113,7 +58,7 @@
                   </mat-panel-title>
 
                   <mat-panel-description>
-                    System Management
+                    System User
                   </mat-panel-description>
 
                 </mat-expansion-panel-header>
@@ -140,6 +85,32 @@
                       <span class="txt_route">Bite Management</span>
                     </button>
               </mat-expansion-panel>
+
+              <mat-expansion-panel style="width: 95%; border-top-right-radius: 50px; border-bottom-right-radius: 50px;box-shadow: none;margin-top: 20px;">
+                <mat-expansion-panel-header>
+                    
+                  <mat-panel-title>
+                    <mat-icon>list_alt</mat-icon>
+                  </mat-panel-title>
+
+                  <mat-panel-description>
+                    Appoinment
+                  </mat-panel-description>
+
+                </mat-expansion-panel-header>
+                    <button routerLink="pending-order" routerLinkActive="activated-route" class="menu-item"
+                        mat-flat-button>
+                      <span class="txt_route">Create Appoinment</span>
+                    </button>
+                    <button routerLink="approved-order" routerLinkActive="activated-route" class="menu-item"
+                        mat-flat-button>
+                      <span class="txt_route">View Appoinments</span>
+                    </button>
+                    <button routerLink="delivered-order" routerLinkActive="activated-route" class="menu-item"
+                        mat-flat-button>
+                      <span class="txt_route">Delivered Order</span>
+                    </button>
+              </mat-expansion-panel> -->
         </mat-list>
       <!-- <div class="div_logout">
         <mat-list>
@@ -160,13 +131,14 @@
     <mat-sidenav-content class="post-login-main-side">
         <mat-toolbar class="header-bar">
             <!-- (click)="sidenav.toggle()"  -->
+
             <button (click)="onMenuToggle()" mat-icon-button class="menu-icon"
                 aria-label="Example icon-button with menu icon">
                 <mat-icon>menu</mat-icon>
             </button>
-            <span class="active_router">{{activeRouter}}</span>
+            <span>{{activeRouter}}</span>
             <span class="example-spacer"></span>
-            <button  mat-icon-button class="header-icon favorite-icon btn-signout" [matMenuTriggerFor]="menu">
+            <button  mat-icon-button class="example-icon header-icon favorite-icon btn-signout" [matMenuTriggerFor]="menu">
                 <!-- <img   class="menu_img" src="../../../assets/icons/logout_FILL0_wght400_GRAD0_opsz48.svg" alt=""> -->
                 P
             </button>
