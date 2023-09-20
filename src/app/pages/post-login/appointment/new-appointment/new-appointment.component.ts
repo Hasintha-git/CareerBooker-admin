@@ -13,13 +13,14 @@ import { AppointmentService } from 'src/app/services/appointment/appointment.ser
 import { ConsultantDaysService } from 'src/app/services/consultant-days/consultant-days.service';
 import { ConsultorService } from 'src/app/services/consultor/consultor.service';
 import { ToastServiceService } from 'src/app/services/toast-service.service';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-new-appointment',
   templateUrl: './new-appointment.component.html',
   styleUrls: ['./new-appointment.component.scss']
 })
-export class NewAppointmentComponent  implements OnInit {
+export class NewAppointmentComponent implements OnInit {
   public statusList: SimpleBase[];
   public specializationList: SimpleBase[];
   public timeSlotList: SimpleBase[];
@@ -43,9 +44,9 @@ export class NewAppointmentComponent  implements OnInit {
   isUserChecked: boolean;
   userId: number;
   consultantId: number;
- 
+
   consultantDaysResponse: any;
-  availableDates:any;
+  availableDates: any;
   dateControl = new FormControl();
   disabledDates = [];
   dayRelatedSlots: SimpleBase[] = [];
@@ -59,7 +60,7 @@ export class NewAppointmentComponent  implements OnInit {
 
   dateFilter = (date: Date | null): boolean => {
     if (!date) {
-      return true; 
+      return true;
     }
 
     for (const disabledDate of this.disabledDates) {
@@ -70,7 +71,7 @@ export class NewAppointmentComponent  implements OnInit {
         date.getMonth() === disabledDate.getMonth() &&
         date.getFullYear() === disabledDate.getFullYear()
       ) {
-        return true; 
+        return true;
       }
     }
 
@@ -86,15 +87,16 @@ export class NewAppointmentComponent  implements OnInit {
     private spinner: NgxSpinnerService,
     private consultorService: ConsultorService,
     private sessionStorage: StorageService,
-    private cdRef: ChangeDetectorRef
+    private cdRef: ChangeDetectorRef,
+    private datePipe: DatePipe
   ) { }
 
   ngOnInit(): void {
     this.initialValidator();
     this.isUserChecked = false;
-    this.isFinished =false;
-    const user=this.sessionStorage.getItem("user");
-    console.log("user",user.username)
+    this.isFinished = false;
+    const user = this.sessionStorage.getItem("user");
+    console.log("user", user.username)
     this.consultor.activeUserName = user.user.username;
     this.consultorDays.activeUserName = user.user.username;
     this.userId = user.user.id
@@ -133,7 +135,7 @@ export class NewAppointmentComponent  implements OnInit {
     if (this.firstFormGroup.valid) {
       this.appointmentService.getConsultantBySpecialization(this.searchSpecialization).subscribe(
         (consultant: any) => {
-          this.consultantId= consultant.data.id;
+          this.consultantId = consultant.data.id;
           this.consultantModel = consultant.data;
           console.log(consultant.data.id)
           this.consultantDaysGet();
@@ -151,43 +153,43 @@ export class NewAppointmentComponent  implements OnInit {
   }
 
   consultantDaysGet() {
-      this.consultorDays.con_id=this.consultantId
-      this.consultantDaysService.getConsultantDaysByCon(this.consultorDays).subscribe(
-        (response: any) => {
-          this.consultantDaysResponse = response;
-          this.availableDates = response.data.availability.daysLists.map(item => item.day.split('T')[0]); // Replace with your actual data
-            console.log(this.availableDates)
-            this.availableDates
-            for (let index = 0; index < this.availableDates.length; index++) {
-              this.disabledDates.push(new Date(this.availableDates[index]));
-              
-            }
-          this.spinner.hide();
-        }, error => {
-          this.spinner.hide();
-          this.toastService.errorMessage(error.error['errorDescription']);
+    this.consultorDays.con_id = this.consultantId
+    this.consultantDaysService.getConsultantDaysByCon(this.consultorDays).subscribe(
+      (response: any) => {
+        this.consultantDaysResponse = response;
+        this.availableDates = response.data.availability.daysLists.map(item => item.day.split('T')[0]); // Replace with your actual data
+        console.log(this.availableDates)
+        this.availableDates
+        for (let index = 0; index < this.availableDates.length; index++) {
+          this.disabledDates.push(new Date(this.availableDates[index]));
+
         }
-      );
+        this.spinner.hide();
+      }, error => {
+        this.spinner.hide();
+        this.toastService.errorMessage(error.error['errorDescription']);
+      }
+    );
   }
 
   onDateSelected(event: any) {
     const inputDate = event.value.toISOString().split('T')[0];
-  
+
     console.log('Input Date:', inputDate);
-  
+
     // Check if consultantDaysResponse is defined and contains the expected properties
     if (!this.consultantDaysResponse?.data?.availability?.daysLists) {
       console.log('Consultant Days data is missing or does not have the expected structure.');
       return;
     }
-  
+
     const filteredList = this.consultantDaysResponse.data.availability.daysLists
       .filter(item => {
         const itemDate = new Date(item.day).toISOString().split('T')[0];
         console.log('Item Date:', itemDate);
         return itemDate === inputDate;
       });
-  
+
     if (filteredList.length === 0) {
       console.log('No slots found for the selected date.');
       this.dayRelatedSlots = [];
@@ -195,9 +197,9 @@ export class NewAppointmentComponent  implements OnInit {
       this.isSlotDisable = true;
       return;
     }
-  
+
     const uniqueSlotCodes = [...new Set(filteredList[0]?.slot || [])];
-  
+
     this.dayRelatedSlots = uniqueSlotCodes.map(code => {
       const timeSlot = this.timeSlotList.find(slot => slot.code === code);
       if (timeSlot) {
@@ -218,7 +220,7 @@ export class NewAppointmentComponent  implements OnInit {
         };
       }
     });
-  
+
     if (this.dayRelatedSlots.length === 0) {
       this.isDateDisable = false;
       this.isSlotDisable = true;
@@ -226,10 +228,10 @@ export class NewAppointmentComponent  implements OnInit {
       this.isDateDisable = true;
       this.isSlotDisable = false;
     }
-  
+
     this.cdRef.detectChanges();
   }
-  
+
   onTimeSlotSelected(selectedCode: string) {
     this.isAppoinmentCreate = true;
     console.log('Selected Time Slot Code:', selectedCode);
@@ -239,11 +241,13 @@ export class NewAppointmentComponent  implements OnInit {
     this.appoinment.consultantId = this.consultantId;
     this.appoinment.activeUserName = this.consultor.activeUserName;
     this.appoinment.userId = this.userId;
-    this.appoinment.bookedDate = this.dateControl.value;
+    console.log('>>>>', this.dateControl.value)
+    const formattedDate = this.datePipe.transform(this.dateControl.value, 'yyyy-MM-dd');
+    this.appoinment.bookedDate = formattedDate;
     this.appoinment.slotId = this.selectedTimeSlot;
     this.appoinment.status = 'active';
 
-    console.log(">>>>>>>>>",this.appoinment)
+    console.log(">>>>>>>>>", this.appoinment)
 
     this.appointmentService.createAppoinment(this.appoinment).subscribe(
       (response: any) => {
@@ -256,7 +260,7 @@ export class NewAppointmentComponent  implements OnInit {
       }
     );
   }
-  
+
   resetAppoinment() {
     this.firstFormGroup.reset();
     this.secondFormGroup.reset();

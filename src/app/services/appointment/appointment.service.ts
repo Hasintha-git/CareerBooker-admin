@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { HttpClient,HttpHeaders, HttpErrorResponse, HttpParams } from '@angular/common/http';
-import {Observable,Subject,throwError} from 'rxjs';
+import { HttpClient, HttpHeaders, HttpErrorResponse, HttpParams } from '@angular/common/http';
+import { Observable, Subject, throwError } from 'rxjs';
 import { getEndpoint, SECURE } from 'src/app/utility/constants/end-point';
 import { DataTable } from 'src/app/models/data-table';
 import { CommonFunctionsService } from '../common-functions/common-function.service';
@@ -8,19 +8,19 @@ import { CommonFunctionsService } from '../common-functions/common-function.serv
 @Injectable({
   providedIn: 'root'
 })
-export class AppointmentService  {
+export class AppointmentService {
 
   requestUrl: string;
   requestUrlPreLogin: string;
 
-  constructor(public httpClient: HttpClient, public commonFunctionService: CommonFunctionsService) { 
+  constructor(public httpClient: HttpClient, public commonFunctionService: CommonFunctionsService) {
     this.requestUrl = `${getEndpoint(SECURE)}/appointment/v1/admin`;
   }
 
   getSearchData(full: boolean): Observable<any> {
     let params = new HttpParams().set('full', full.toString());
     let httpHeaders = new HttpHeaders().set('Content-Type', 'application/json');
-    return this.httpClient.get(this.requestUrl+ `/search-reference-data` , {
+    return this.httpClient.get(this.requestUrl + `/search-reference-data`, {
       responseType: 'json',
       headers: httpHeaders,
       params
@@ -30,7 +30,7 @@ export class AppointmentService  {
   getList(searchParamMap: Map<string, string>): Observable<DataTable<any>> {
     let httpParams = this.commonFunctionService.getDataTableHttpParam(searchParamMap);
     let httpHeaders = new HttpHeaders().set('Content-Type', 'application/json');
-    return this.httpClient.get(this.requestUrl+ `/filter-list`, {
+    return this.httpClient.get(this.requestUrl + `/filter-list`, {
       headers: httpHeaders,
       params: httpParams,
       responseType: 'json'
@@ -39,11 +39,11 @@ export class AppointmentService  {
 
 
   get(object: any): Observable<any> {
-    return this.httpClient.post(this.requestUrl+ `/find-id`, object, {responseType: 'json'});
+    return this.httpClient.post(this.requestUrl + `/find-id`, object, { responseType: 'json' });
   }
 
   getConsultantBySpecialization(id: any): Observable<any> {
-    return this.httpClient.post(this.requestUrl+ `/consultant-by-specialization/`+`${id}`, {responseType: 'json'});
+    return this.httpClient.post(this.requestUrl + `/consultant-by-specialization/` + `${id}`, { responseType: 'json' });
   }
 
   deleteUser(object: any): Observable<any> {
@@ -55,11 +55,11 @@ export class AppointmentService  {
   }
 
   createAppoinment(object: any): Observable<any> {
-    return this.httpClient.post(this.requestUrl+ `/schedule` , object, {responseType: 'json'});
+    return this.httpClient.post(this.requestUrl + `/schedule`, object, { responseType: 'json' });
   }
 
   update(object: any): Observable<any> {
-    return this.httpClient.put(this.requestUrl  , object, {responseType: 'json'});
+    return this.httpClient.put(this.requestUrl, object, { responseType: 'json' });
   }
 
 

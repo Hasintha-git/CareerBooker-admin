@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastServiceService } from 'src/app/services/toast-service.service';
 import { MatDialog } from '@angular/material/dialog';
-import {  Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { SimpleBase } from 'src/app/models/SimpleBase';
 import { Consultor } from 'src/app/models/consultor';
 import { ConsultorService } from 'src/app/services/consultor/consultor.service';
@@ -14,6 +14,8 @@ import { merge, tap } from 'rxjs';
 import { PAGE_LENGTH } from 'src/app/utility/constants/system-config';
 import { CommonFunctionsService } from 'src/app/services/common-functions/common-function.service';
 import { NewAppointmentComponent } from './new-appointment/new-appointment.component';
+import { AppointmentService } from 'src/app/services/appointment/appointment.service';
+import { Appoinment } from 'src/app/models/appoinment';
 
 @Component({
   selector: 'app-appointment',
@@ -22,14 +24,14 @@ import { NewAppointmentComponent } from './new-appointment/new-appointment.compo
 })
 export class AppointmentComponent implements OnInit, OnDestroy {
   public userSearch: FormGroup;
-  public userList: Consultor[];
-  public searchModel: Consultor;
+  public appoinmentList: Appoinment[];
+  public searchModel: Appoinment;
   public statusList: SimpleBase[];
   public specializationList: SimpleBase[];
   public timeSlotList: SimpleBase[];
   public isSearch: boolean;
   public access: any;
-  breakpoint :any;
+  breakpoint: any;
 
   public dataSourceUser: Commondatasource;
   @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
@@ -40,6 +42,7 @@ export class AppointmentComponent implements OnInit, OnDestroy {
     public router: Router,
     private spinner: NgxSpinnerService,
     private consultorService: ConsultorService,
+    private appoinmentService: AppointmentService,
     private formBuilder: FormBuilder,
     private sessionStorage: StorageService,
     private commonFunctionService: CommonFunctionsService,
@@ -50,14 +53,14 @@ export class AppointmentComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.spinner.show();
-    this.searchModel = new Consultor();
-    this.searchModel.pageNumber=0;
-    this.searchModel.pageSize=5;
+    this.searchModel = new Appoinment();
+    this.searchModel.pageNumber = 0;
+    this.searchModel.pageSize = 5;
     this.prepareReferenceData();
     this.initialDataLoader();
     this.breakpoint = (window.innerWidth <= 400) ? 1 : 3;
     this.initialForm();
-    this.access=this.sessionStorage.getItem("userrole");
+    this.access = this.sessionStorage.getItem("userrole");
 
   }
 
@@ -65,8 +68,9 @@ export class AppointmentComponent implements OnInit, OnDestroy {
     this.userSearch = this.formBuilder.group({
       username: this.formBuilder.control('', []),
       spe_id: this.formBuilder.control('', []),
+      consultantName: this.formBuilder.control('', []),
       status: this.formBuilder.control('', []),
-      nic: this.formBuilder.control('', []),
+      slotId: this.formBuilder.control('', []),
     });
   }
 
@@ -80,10 +84,10 @@ export class AppointmentComponent implements OnInit, OnDestroy {
         this.specializationList = response.specializationList;
         this.timeSlotList = response.timeSlotList;
       },
-      error => {
-        this.toast.errorMessage(error.error['message']);
-      }
-    );
+        error => {
+          this.toast.errorMessage(error.error['message']);
+        }
+      );
   }
 
   ngAfterViewInit() {
@@ -126,37 +130,40 @@ export class AppointmentComponent implements OnInit, OnDestroy {
 
   getList() {
     this.spinner.show();
-    let searchParamMap = this.commonFunctionService.getDataTableParam(this.paginator,null);
+    let searchParamMap = this.commonFunctionService.getDataTableParam(this.paginator, null);
     if (this.isSearch) {
       searchParamMap = this.getSearchString(searchParamMap, this.searchModel);
     }
-    this.consultorService.getList(searchParamMap)
+    this.appoinmentService.getList(searchParamMap)
       .subscribe((data: any) => {
-        this.userList = data.records;
-        this.dataSourceUser.datalist = this.userList;
-        this.dataSourceUser.usersSubject.next(this.userList);
+        this.appoinmentList = data.records;
+        this.dataSourceUser.datalist = this.appoinmentList;
+        this.dataSourceUser.usersSubject.next(this.appoinmentList);
         this.dataSourceUser.countSubject.next(data.totalRecords);
         this.spinner.hide();
       },
-      error => {
-        this.spinner.hide();
-        this.toast.errorMessage(error.error['errorDescription']);
-      }
-    );
+        error => {
+          this.spinner.hide();
+          this.toast.errorMessage(error.error['errorDescription']);
+        }
+      );
   }
 
-  getSearchString(searchParamMap: Map<string, any>, searchModel: Consultor): Map<string, string> {
+  getSearchString(searchParamMap: Map<string, any>, searchModel: Appoinment): Map<string, string> {
     if (searchModel.username) {
       searchParamMap.set("username", searchModel.username);
     }
-    if (searchModel.nic) {
-      searchParamMap.set("nic", searchModel.nic);
+    if (searchModel.consultantName) {
+      searchParamMap.set("consultantName", searchModel.consultantName);
     }
     if (searchModel.spe_id) {
       searchParamMap.set("spe_id", searchModel.spe_id);
     }
     if (searchModel.status) {
       searchParamMap.set("status", searchModel.status);
+    }
+    if (searchModel.slotId) {
+      searchParamMap.set("slotId", searchModel.slotId);
     }
     return searchParamMap;
   }
@@ -202,8 +209,8 @@ export class AppointmentComponent implements OnInit, OnDestroy {
     return this.userSearch.get('username');
   }
 
-  get fullName() {
-    return this.userSearch.get('fullName');
+  get consultantName() {
+    return this.userSearch.get('consultantName');
   }
 
   get status() {
@@ -214,9 +221,9 @@ export class AppointmentComponent implements OnInit, OnDestroy {
     return this.userSearch.get('spe_id');
   }
 
-  get nic() {
-    return this.userSearch.get('nic');
+  get slotId() {
+    return this.userSearch.get('slotId');
   }
 
-  
+
 }

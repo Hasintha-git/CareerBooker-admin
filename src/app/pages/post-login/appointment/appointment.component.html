@@ -1,97 +1,102 @@
 <form class="main-form">
-    <div class="common-input-field-section">
-  
-      <div class="input-fields">
-        <mat-form-field class="min-field" appearance="outline">
-          <mat-label>User Name</mat-label>
-          <input matInput type="text" [formControl]="username" [(ngModel)]="searchModel.username" appRegex
-            regexType="letter_num_space" [attr.maxlength]="20" />
-        </mat-form-field>
-      </div>
-  
-  
-  
-      <div class="input-fields">
-        <mat-form-field class="min-field " appearance="outline">
-          <mat-label>Nic</mat-label>
-          <input matInput type="text" [formControl]="nic" [(ngModel)]="searchModel.nic" appRegex
-            regexType="letter_num_space" [attr.maxlength]="12" />
-        </mat-form-field>
-      </div>
-  
- 
-  
-      <div class="input-fields">
-        <mat-form-field class="min-field" appearance="outline">
-          <mat-label>Specialization</mat-label>
-          <mat-select [formControl]="spe_id" [(ngModel)]="searchModel.spe_id">
-            <mat-option [value]="">Select Specialization</mat-option>
-            <mat-option *ngFor="let ur of specializationList" [value]="ur.id">
-              {{ur.description}}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
-      </div>
-  
-      <div class="input-fields">
-        <mat-form-field class="min-field " appearance="outline">
-          <mat-label>Status</mat-label>
-          <mat-select [formControl]="status" [(ngModel)]="searchModel.status">
-            <mat-option [value]="">Select Status</mat-option>
-            <mat-option *ngFor="let st of statusList" [value]="st.code">
-              {{st.description}}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
-      </div>
+  <div class="common-input-field-section">
+
+    <div class="input-fields">
+      <mat-form-field class="min-field" appearance="outline">
+        <mat-label>User Name</mat-label>
+        <input matInput type="text" [formControl]="username" [(ngModel)]="searchModel.username" appRegex
+          regexType="letter_num_space" [attr.maxlength]="20" />
+      </mat-form-field>
     </div>
-  
-    <div class="common-button-section">
-      <button type="button" mat-button class="custom-button primary" (click)="searchUser(true)">Search
-      </button>
-      <button type="reset" mat-button class="custom-button secondary" (click)="resetUserSearch()">Reset
-      </button>
-      <button mat-button class="custom-button image-button" (click)="add()">
-        <img class="table-action-button" src="assets/images/icons/ic_plus.svg" alt="View"> New Appoinment
-      </button>
+
+    <div class="input-fields">
+      <mat-form-field class="min-field" appearance="outline">
+        <mat-label>Consultant Name</mat-label>
+        <input matInput type="text" [formControl]="consultantName" [(ngModel)]="searchModel.consultantName" appRegex
+          regexType="letter_num_space" [attr.maxlength]="20" />
+      </mat-form-field>
     </div>
-  </form>
-  
 
-  <mat-grid-list [cols]="breakpoint" rowHeight="450px" (window:resize)="onResize($event)">
-  
+    <div class="input-fields">
+      <mat-form-field class="min-field" appearance="outline">
+        <mat-label>Specialization</mat-label>
+        <mat-select [formControl]="spe_id" [(ngModel)]="searchModel.spe_id">
+          <mat-option *ngFor="let ur of specializationList" [value]="ur.id">
+            {{ur.description}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
 
-    <mat-grid-tile  *ngFor="let user of userList">
-      <div class="card">
-        <h3>{{user.speDescription}}</h3>
-        <div class="coast">
-            <h1>{{user.fullName}}</h1>
-        </div>
-        <ul>
-            <li>{{user.mobileNo}}</li>
-            <li>{{user.email}}</li>
-            <li>{{user.city}}</li>
-        </ul>
-        <button *ngIf="access != 'admin'">VIEW MORE</button>
+    <div class="input-fields">
+      <mat-form-field class="min-field" appearance="outline">
+        <mat-label>Time Slot</mat-label>
+        <mat-select [formControl]="slotId" [(ngModel)]="searchModel.slotId">
+          <mat-option *ngFor="let ur of timeSlotList" [value]="ur.code">
+            {{ur.description}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
 
-        <div class="card-icons  icn-hover">
-          <a *ngIf="access == 'admin'" class="table-action-buttons-column" title="View">
-            <img class="table-action-button " src="assets/images/icons/ic_view.svg" alt="View">
+    <div class="input-fields">
+      <mat-form-field class="min-field " appearance="outline">
+        <mat-label>Status</mat-label>
+        <mat-select [formControl]="status" [(ngModel)]="searchModel.status">
+          <mat-option *ngFor="let st of statusList" [value]="st.code">
+            {{st.description}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+  </div>
+
+  <div class="common-button-section">
+    <button type="button" mat-button class="custom-button primary" (click)="searchUser(true)">Search
+    </button>
+    <button type="reset" mat-button class="custom-button secondary" (click)="resetUserSearch()">Reset
+    </button>
+    <button mat-button class="custom-button image-button" (click)="add()">
+      <img class="table-action-button" src="assets/images/icons/ic_plus.svg" alt="View"> New Appoinment
+    </button>
+  </div>
+</form>
+
+
+<mat-grid-list [cols]="breakpoint" rowHeight="450px" (window:resize)="onResize($event)">
+
+
+  <mat-grid-tile *ngFor="let appointment of appoinmentList">
+    <div class="card">
+      <h3>{{appointment.bookedSlot}}</h3>
+      <div class="coast">
+        <h2>{{appointment.bookedDate}}</h2>
+      </div>
+      <ul>
+        <li>Appointment User : {{appointment.userName}}</li>
+        <li>Consultor : {{appointment.consultantUserName}}</li>
+        <li>Specialization : {{appointment.consultantSpecialize}}</li>
+      </ul>
+      <button *ngIf="access != 'admin'">VIEW MORE</button>
+
+      <div class="card-icons  icn-hover">
+        <a *ngIf="access == 'admin'" class="table-action-buttons-column" title="View">
+          <img class="table-action-button " src="assets/images/icons/ic_view.svg" alt="View">
         </a>
-          <a *ngIf="access == 'admin'" class="table-action-buttons-column" title="Delete">
-              <img class="table-action-button" src="assets/images/icons/ic_delete.svg" alt="Delete">
-          </a>
-          <a *ngIf="access == 'admin'" class="table-action-buttons-column" title="Edit">
-              <img class="table-action-button" src="assets/images/icons/ic_edit.svg" alt="Edit">
-          </a>
+        <a *ngIf="access == 'admin'" class="table-action-buttons-column" title="Delete">
+          <img class="table-action-button" src="assets/images/icons/ic_delete.svg" alt="Delete">
+        </a>
+        <a *ngIf="access == 'admin'" class="table-action-buttons-column" title="Edit">
+          <img class="table-action-button" src="assets/images/icons/ic_edit.svg" alt="Edit">
+        </a>
       </div>
 
     </div>
-    </mat-grid-tile>
+  </mat-grid-tile>
 
-    <div class="table-no-data" *ngIf="dataSourceUser.datalist.length == 0">Records empty</div>
-    <div class="dev-pagination">
-      <mat-paginator style="background-color: transparent !important;" [pageSizeOptions]="[5, 10, 25, 100]" ></mat-paginator>
-     </div>
-  </mat-grid-list>
-  
+  <div class="table-no-data" *ngIf="dataSourceUser.datalist.length == 0">Records empty</div>
+  <div class="dev-pagination">
+    <mat-paginator style="background-color: transparent !important;"
+      [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+  </div>
+</mat-grid-list>

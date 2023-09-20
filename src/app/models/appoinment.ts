@@ -1,9 +1,17 @@
 export class Appoinment {
-  consultantId:number;
+  consultantId: number;
   userId: number;
-  bookedDate: Date;
+  bookedDate: string;
   slotId: string;
   status: string;
+
+  consultantName: string;
+  spe_id: number;
+  username: string;
+
+
+  pageSize:number;
+  pageNumber:number;
 
   activeUserName:string;
 }
