@@ -4,6 +4,7 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { PostLoginComponent } from './post-login.component';
 import { UserComponent } from './user/user.component';
 import { ConsultorComponent } from './consultor/consultor.component';
+import { AppointmentComponent } from './appointment/appointment.component';
 
 const routes: Routes = [
   {path:'',component:PostLoginComponent, children:[
@@ -11,6 +12,7 @@ const routes: Routes = [
     {path:'dashboard',component:DashboardComponent},
     {path:'user',component:UserComponent},
     {path:'consultor',component:ConsultorComponent},
+    {path:'appoinment', component:AppointmentComponent}
     // {
     //   path: 'employee-analytics',
     //   loadChildren: () => import('./employee-analytics/employee-analytics.module').then(m => m.EmployeeAnalyticsModule),

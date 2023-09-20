@@ -5,17 +5,16 @@ import { getEndpoint, SECURE } from 'src/app/utility/constants/end-point';
 import { DataTable } from 'src/app/models/data-table';
 import { CommonFunctionsService } from '../common-functions/common-function.service';
 
-
 @Injectable({
   providedIn: 'root'
 })
-export class ConsultorService {
+export class AppointmentService  {
 
   requestUrl: string;
   requestUrlPreLogin: string;
 
   constructor(public httpClient: HttpClient, public commonFunctionService: CommonFunctionsService) { 
-    this.requestUrl = `${getEndpoint(SECURE)}/consultant/v1/admin`;
+    this.requestUrl = `${getEndpoint(SECURE)}/appointment/v1/admin`;
   }
 
   getSearchData(full: boolean): Observable<any> {
@@ -43,6 +42,10 @@ export class ConsultorService {
     return this.httpClient.post(this.requestUrl+ `/find-id`, object, {responseType: 'json'});
   }
 
+  getConsultantBySpecialization(id: any): Observable<any> {
+    return this.httpClient.post(this.requestUrl+ `/consultant-by-specialization/`+`${id}`, {responseType: 'json'});
+  }
+
   deleteUser(object: any): Observable<any> {
     let httpHeaders = new HttpHeaders().set('Content-Type', 'application/json');
     return this.httpClient.delete(this.requestUrl, {
@@ -51,8 +54,8 @@ export class ConsultorService {
     });
   }
 
-  add(object: any): Observable<any> {
-    return this.httpClient.post(this.requestUrl  , object, {responseType: 'json'});
+  createAppoinment(object: any): Observable<any> {
+    return this.httpClient.post(this.requestUrl+ `/schedule` , object, {responseType: 'json'});
   }
 
   update(object: any): Observable<any> {

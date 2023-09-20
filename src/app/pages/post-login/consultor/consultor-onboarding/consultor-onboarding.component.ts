@@ -12,6 +12,7 @@ import { Consultor } from 'src/app/models/consultor';
 import { ConsultorDays } from 'src/app/models/consultorDays';
 import { SlotDtoList } from 'src/app/models/slotDtoList';
 import { User } from 'src/app/models/user';
+import { ConsultantDaysService } from 'src/app/services/consultant-days/consultant-days.service';
 import { ConsultorService } from 'src/app/services/consultor/consultor.service';
 import { ToastServiceService } from 'src/app/services/toast-service.service';
 import { UserService } from 'src/app/services/user/user.service';
@@ -33,6 +34,7 @@ export class ConsultorOnboardingComponent implements OnInit {
   firstFormGroup: FormGroup;
   secondFormGroup: FormGroup;
   isEditable: boolean;
+  isFinished: boolean;
   consultantAdd: FormGroup;
 
   searchNic: string;
@@ -50,12 +52,14 @@ export class ConsultorOnboardingComponent implements OnInit {
     private _formBuilder: FormBuilder,
     private spinner: NgxSpinnerService,
     private consultorService: ConsultorService,
+    private consultantDaysService: ConsultantDaysService,
     private sessionStorage: StorageService
   ) { }
 
   ngOnInit(): void {
     this.initialValidator();
-    this.isUserChecked = false;;
+    this.isUserChecked = false;
+    this.isFinished =false;
     const user=this.sessionStorage.getItem("user");
     console.log("user",user.username)
     this.consultor.activeUserName = user.user.username;
@@ -142,7 +146,9 @@ export class ConsultorOnboardingComponent implements OnInit {
       this.consultorDays.slotDtoList.push(slotDto);
     }
 
-    console.log("list", this.consultorDays.slotDtoList)
+    console.log("list", this.consultorDays.slotDtoList);
+    this.isFinished=true;
+
   }
 
   updateSlotDtoList(dto: any, i: number) {
@@ -155,6 +161,18 @@ export class ConsultorOnboardingComponent implements OnInit {
   }
 
 
+  submitAvailability() {
+    this.spinner.show();
+    this.consultantDaysService.add(this.consultorDays).subscribe((response: any) => {
+      this.spinner.hide();
+      this.toastService.successMessage(response.responseDescription);
+          this.dialogRef.close();
+      console.log(response)
+    }, error => {
+      this.spinner.hide();
+      this.toastService.errorMessage(error.error['errorDescription']);
+    })
+  }
 
   secondScreen() {
 

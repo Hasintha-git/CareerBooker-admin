@@ -13,14 +13,14 @@ import { Commondatasource } from 'src/app/datasources/commondatasource';
 import { merge, tap } from 'rxjs';
 import { PAGE_LENGTH } from 'src/app/utility/constants/system-config';
 import { CommonFunctionsService } from 'src/app/services/common-functions/common-function.service';
-import { ConsultorOnboardingComponent } from './consultor-onboarding/consultor-onboarding.component';
+import { NewAppointmentComponent } from './new-appointment/new-appointment.component';
 
 @Component({
-  selector: 'app-consultor',
-  templateUrl: './consultor.component.html',
-  styleUrls: ['./consultor.component.scss']
+  selector: 'app-appointment',
+  templateUrl: './appointment.component.html',
+  styleUrls: ['./appointment.component.scss']
 })
-export class ConsultorComponent implements OnInit, OnDestroy {
+export class AppointmentComponent implements OnInit, OnDestroy {
   public userSearch: FormGroup;
   public userList: Consultor[];
   public searchModel: Consultor;
@@ -172,7 +172,7 @@ export class ConsultorComponent implements OnInit, OnDestroy {
   }
 
   add() {
-    const dialogRef = this.dialog.open(ConsultorOnboardingComponent, { width: '80%', height: '475px' });
+    const dialogRef = this.dialog.open(NewAppointmentComponent, { width: '80%', height: '475px' });
     dialogRef.componentInstance.statusList = this.statusList;
     dialogRef.componentInstance.specializationList = this.specializationList;
     dialogRef.componentInstance.timeSlotList = this.timeSlotList;

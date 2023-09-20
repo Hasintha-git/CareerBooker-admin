@@ -35,6 +35,8 @@ import { ConsultorComponent } from './consultor/consultor.component';
 import { ConsultorOnboardingComponent } from './consultor/consultor-onboarding/consultor-onboarding.component';
 import { MatStepperModule } from '@angular/material/stepper';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { AppointmentComponent } from './appointment/appointment.component';
+import { NewAppointmentComponent } from './appointment/new-appointment/new-appointment.component';
 
 @NgModule({
   declarations: [
@@ -47,7 +49,9 @@ import { MatFormFieldModule } from '@angular/material/form-field';
     EditUserComponent,
     DeleteUserComponent,
     ConsultorComponent,
-    ConsultorOnboardingComponent
+    ConsultorOnboardingComponent,
+    AppointmentComponent,
+    NewAppointmentComponent
   ],
   imports: [
     CommonModule,

@@ -2,63 +2,28 @@ import { Injectable } from '@angular/core';
 import { HttpClient,HttpHeaders, HttpErrorResponse, HttpParams } from '@angular/common/http';
 import {Observable,Subject,throwError} from 'rxjs';
 import { getEndpoint, SECURE } from 'src/app/utility/constants/end-point';
-import { DataTable } from 'src/app/models/data-table';
 import { CommonFunctionsService } from '../common-functions/common-function.service';
-
 
 @Injectable({
   providedIn: 'root'
 })
-export class ConsultorService {
+export class ConsultantDaysService {
+
 
   requestUrl: string;
   requestUrlPreLogin: string;
 
   constructor(public httpClient: HttpClient, public commonFunctionService: CommonFunctionsService) { 
-    this.requestUrl = `${getEndpoint(SECURE)}/consultant/v1/admin`;
-  }
-
-  getSearchData(full: boolean): Observable<any> {
-    let params = new HttpParams().set('full', full.toString());
-    let httpHeaders = new HttpHeaders().set('Content-Type', 'application/json');
-    return this.httpClient.get(this.requestUrl+ `/search-reference-data` , {
-      responseType: 'json',
-      headers: httpHeaders,
-      params
-    });
-  }
-
-  getList(searchParamMap: Map<string, string>): Observable<DataTable<any>> {
-    let httpParams = this.commonFunctionService.getDataTableHttpParam(searchParamMap);
-    let httpHeaders = new HttpHeaders().set('Content-Type', 'application/json');
-    return this.httpClient.get(this.requestUrl+ `/filter-list`, {
-      headers: httpHeaders,
-      params: httpParams,
-      responseType: 'json'
-    });
-  }
-
-
-  get(object: any): Observable<any> {
-    return this.httpClient.post(this.requestUrl+ `/find-id`, object, {responseType: 'json'});
-  }
-
-  deleteUser(object: any): Observable<any> {
-    let httpHeaders = new HttpHeaders().set('Content-Type', 'application/json');
-    return this.httpClient.delete(this.requestUrl, {
-      responseType: 'json',
-      headers: httpHeaders
-    });
+    this.requestUrl = `${getEndpoint(SECURE)}/consultant-days/v1/admin`;
   }
 
   add(object: any): Observable<any> {
     return this.httpClient.post(this.requestUrl  , object, {responseType: 'json'});
   }
 
-  update(object: any): Observable<any> {
-    return this.httpClient.put(this.requestUrl  , object, {responseType: 'json'});
+  getConsultantDaysByCon(object: any): Observable<any> {
+    return this.httpClient.post(this.requestUrl+ `/find-con`, object, {responseType: 'json'});
   }
-
 
   private handleError(error: HttpErrorResponse) {
     let errorMessage = 'An unknown error occurred.';
