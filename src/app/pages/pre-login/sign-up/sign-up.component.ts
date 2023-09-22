@@ -15,7 +15,9 @@ import { ToastServiceService } from 'src/app/services/toast-service.service';
 })
 export class SignUpComponent implements OnInit {
   signUpModel = new User();
-  userForm: FormGroup;
+  userForm1: FormGroup;
+  userForm2: FormGroup;
+  userForm3: FormGroup;
   hide = true;
   isNext: string;
 
@@ -33,31 +35,54 @@ export class SignUpComponent implements OnInit {
     this.initialValidator()
   }
   initialValidator() {
-  this.userForm = this.formBuilder.group({
+  this.userForm1 = this.formBuilder.group({
     username : this.formBuilder.control('', [Validators.required]),
     fullName : this.formBuilder.control('', [Validators.required]),
     nic : this.formBuilder.control('', [Validators.required]),
+    dateOfBirth : this.formBuilder.control('', [Validators.required])
+  });
+
+  this.userForm2 = this.formBuilder.group({
     email : this.formBuilder.control('', [Validators.required]),
     mobileNo : this.formBuilder.control('', [Validators.required]),
-    dateOfBirth : this.formBuilder.control('', [Validators.required]),
     address : this.formBuilder.control('', [Validators.required]),
     city : this.formBuilder.control('', [Validators.required]),
-    statusCode : this.formBuilder.control('', [Validators.required]),
+  });
+
+  this.userForm3 = this.formBuilder.group({
     password : this.formBuilder.control('', [Validators.required]),
     confirmPassword : this.formBuilder.control('', [Validators.required])
   });
   }
 
   firstTab() {
-    this.isNext = '1';
+    // if (this.userForm1.valid) {
+      this.isNext = '1';
+    // }else {
+    //   this.spinner.hide();
+    //   this.toastr.errorMessage('Please fill in all required fields');
+    //   this.mandatoryValidation(this.userForm1)
+    // }
   }
 
   secondTab() {
-    this.isNext = '2';
+    if (this.userForm1.valid) {
+      this.isNext = '2';
+    }else {
+      this.spinner.hide();
+      this.toastr.errorMessage('Please fill in all required fields');
+      this.mandatoryValidation(this.userForm1)
+    }
   }
 
   threeTab() {
-    this.isNext = '3';
+    if (this.userForm2.valid) {
+      this.isNext = '3';
+    }else {
+      this.spinner.hide();
+      this.toastr.errorMessage('Please fill in all required fields');
+      this.mandatoryValidation(this.userForm2)
+    }
   }
 
   login() {
@@ -66,13 +91,13 @@ export class SignUpComponent implements OnInit {
 
   onSubmit() {
     this.spinner.show();
-    if (this.userForm.valid) {
+    if (this.userForm3.valid) {
       this.userService.userRegister(this.signUpModel).subscribe((userResponse: any)=> {
         this.toastr.successMessage(userResponse.msg);
         // this.routerLink.navigateByUrl('/login')
-        this.userForm.reset();
-        Object.keys(this.userForm.controls).forEach(key => {
-          const control = this.userForm.controls[key];
+        this.userForm3.reset();
+        Object.keys(this.userForm3.controls).forEach(key => {
+          const control = this.userForm3.controls[key];
           control.clearValidators();
           control.updateValueAndValidity();
         });
@@ -85,7 +110,7 @@ export class SignUpComponent implements OnInit {
     } else {
       this.spinner.hide();
       this.toastr.errorMessage('Please fill in all required fields');
-      this.mandatoryValidation(this.userForm)
+      this.mandatoryValidation(this.userForm3)
     }
   }
 
@@ -105,15 +130,35 @@ export class SignUpComponent implements OnInit {
   }
 
   get username() {
-    return this.userForm.get('username');
+    return this.userForm1.get('username');
   }
 
+  get fullName() {
+    return this.userForm1.get('fullName');
+  }
 
+  get nic() {
+    return this.userForm1.get('nic');
+  }
+
+  get dateOfBirth() {
+    return this.userForm1.get('dateOfBirth');
+  }
+
+  get city() {
+    return this.userForm2.get('city');
+  }
+  get address() {
+    return this.userForm2.get('address');
+  }
   get email() {
-    return this.userForm.get('email');
+    return this.userForm2.get('email');
+  }
+  get mobileNo() {
+    return this.userForm2.get('mobileNo');
   }
 
   get password() {
-    return this.userForm.get('password');
+    return this.userForm3.get('password');
   } 
 }

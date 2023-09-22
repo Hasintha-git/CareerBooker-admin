@@ -16,6 +16,7 @@ import { CommonFunctionsService } from 'src/app/services/common-functions/common
 import { NewAppointmentComponent } from './new-appointment/new-appointment.component';
 import { AppointmentService } from 'src/app/services/appointment/appointment.service';
 import { Appoinment } from 'src/app/models/appoinment';
+import { ViewAppointmentComponent } from './view-appointment/view-appointment.component';
 
 @Component({
   selector: 'app-appointment',
@@ -32,7 +33,9 @@ export class AppointmentComponent implements OnInit, OnDestroy {
   public isSearch: boolean;
   public access: any;
   breakpoint: any;
+  isUserNameDisable: boolean;
 
+  activeUser: any
   public dataSourceUser: Commondatasource;
   @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
 
@@ -53,26 +56,38 @@ export class AppointmentComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.spinner.show();
+    this.isUserNameDisable = false;
     this.searchModel = new Appoinment();
+    this.access = this.sessionStorage.getItem("userrole");
+    this.activeUser=this.sessionStorage.getItem("user");
+    console.log("user",this.activeUser.user.username)
+    this.searchModel.activeUserName = this.activeUser.user.username;
+
+    if(this.access != 'admin') {
+      this.searchModel.username = this.searchModel.activeUserName;
+      this.isSearch=true;
+      this.isUserNameDisable = true;
+    }
     this.searchModel.pageNumber = 0;
     this.searchModel.pageSize = 5;
     this.prepareReferenceData();
     this.initialDataLoader();
     this.breakpoint = (window.innerWidth <= 400) ? 1 : 3;
     this.initialForm();
-    this.access = this.sessionStorage.getItem("userrole");
-
+  
   }
 
   initialForm() {
     this.userSearch = this.formBuilder.group({
-      username: this.formBuilder.control('', []),
-      spe_id: this.formBuilder.control('', []),
-      consultantName: this.formBuilder.control('', []),
-      status: this.formBuilder.control('', []),
-      slotId: this.formBuilder.control('', []),
+      username: { value: '', disabled: this.isUserNameDisable },
+      spe_id: '',
+      consultantName: '',
+      status: '',
+      slotId: '',
     });
   }
+  
+  
 
   onResize(event) {
     this.breakpoint = (event.target.innerWidth <= 400) ? 1 : 3;
@@ -137,6 +152,7 @@ export class AppointmentComponent implements OnInit, OnDestroy {
     this.appoinmentService.getList(searchParamMap)
       .subscribe((data: any) => {
         this.appoinmentList = data.records;
+        console.log("**",this.appoinmentList)
         this.dataSourceUser.datalist = this.appoinmentList;
         this.dataSourceUser.usersSubject.next(this.appoinmentList);
         this.dataSourceUser.countSubject.next(data.totalRecords);
@@ -175,6 +191,14 @@ export class AppointmentComponent implements OnInit, OnDestroy {
 
   resetUserSearch() {
     this.userSearch.reset();
+    console.log(this.activeUser)
+    console.log(this.access)
+    if(this.access != 'admin') {
+      console.log("************",this.activeUser.user.username)
+      this.searchModel.username = this.activeUser.user.username;
+      this.isSearch=true;
+      this.isUserNameDisable = true;
+    }
     this.initialDataLoader();
   }
 
@@ -198,7 +222,11 @@ export class AppointmentComponent implements OnInit, OnDestroy {
   }
 
   view(id: any) {
-    // Implement your logic to view a user.
+    console.log("clicked", id)
+    const dialogRef = this.dialog.open(ViewAppointmentComponent, { data: id });
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(`Dialog result: ${result}`);
+    });
   }
 
   ngOnDestroy() {

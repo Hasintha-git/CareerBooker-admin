@@ -77,10 +77,10 @@
         <li>Consultor : {{appointment.consultantUserName}}</li>
         <li>Specialization : {{appointment.consultantSpecialize}}</li>
       </ul>
-      <button *ngIf="access != 'admin'">VIEW MORE</button>
+      <button *ngIf="access != 'admin'" (click)="view(appointment.appointmentId)">VIEW MORE</button>
 
       <div class="card-icons  icn-hover">
-        <a *ngIf="access == 'admin'" class="table-action-buttons-column" title="View">
+        <a *ngIf="access == 'admin'" class="table-action-buttons-column" (click)="view(appointment.appointmentId)" title="View">
           <img class="table-action-button " src="assets/images/icons/ic_view.svg" alt="View">
         </a>
         <a *ngIf="access == 'admin'" class="table-action-buttons-column" title="Delete">

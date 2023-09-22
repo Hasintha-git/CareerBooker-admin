@@ -37,6 +37,7 @@ import { MatStepperModule } from '@angular/material/stepper';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { AppointmentComponent } from './appointment/appointment.component';
 import { NewAppointmentComponent } from './appointment/new-appointment/new-appointment.component';
+import { ViewAppointmentComponent } from './appointment/view-appointment/view-appointment.component';
 
 @NgModule({
   declarations: [
@@ -51,7 +52,8 @@ import { NewAppointmentComponent } from './appointment/new-appointment/new-appoi
     ConsultorComponent,
     ConsultorOnboardingComponent,
     AppointmentComponent,
-    NewAppointmentComponent
+    NewAppointmentComponent,
+    ViewAppointmentComponent
   ],
   imports: [
     CommonModule,

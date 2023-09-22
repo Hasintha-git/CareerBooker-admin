@@ -1,11 +1,12 @@
 <div class="login-main">
-    <form class="login-side1"  (ngSubmit)="onSubmit()" [formGroup]="userForm">
+    <div class="login-side1">
         <div class="login-side1-div" *ngIf="isNext == '1'">
           <img class="login-side2-image" src="../../../../assets/images/careerbooker.png" alt="">
 
           <div class="login-side1-row-title">
                 <h2 class="welcome">Register</h2>
             </div>
+            <form   [formGroup]="userForm1">
             <div style="display: flex;flex-direction: column;">
                 <label style="font-weight: 500;">User Name</label>
                 <mat-form-field class="ultra-max-field" appearance="outline">
@@ -45,10 +46,11 @@
             <div class="login-side1-row">
                 <button class="route-login" type="button" (click)="login()"  mat-flat-button>Login</button>    
             </div>
+        </form>
         </div>
 
         <div class="login-side1-div" *ngIf="isNext== '2'">
-
+            <form [formGroup]="userForm2">
               <div style="display: flex;flex-direction: column;">
                   <label style="font-weight: 500;">City</label>
                   <mat-form-field class="ultra-max-field" appearance="outline">
@@ -91,12 +93,13 @@
                 <button class="btn-back" type="button" (click)="firstTab()"  mat-flat-button>Back</button>
                   <button class="btn-login" type="button" (click)="threeTab()"  mat-flat-button>Next</button>
               </div>
+            </form>
           </div>
 
 
           <div class="login-side1-div" *ngIf="isNext == '3'">
 
-            
+            <form  [formGroup]="userForm3">
               <div style="display: flex;flex-direction: column;">
                   <label style="font-weight: 500;">Password</label>  
                   <mat-form-field class="ultra-max-field" appearance="outline">
@@ -127,6 +130,7 @@
                   <button class="btn-back" type="button" (click)="secondTab()"  mat-flat-button>Back</button>
                   <button class="btn-login" type="submit"  mat-flat-button>Register</button>
               </div>
+            </form>
           </div>
-    </form>
+    </div>
 </div>
