@@ -36,7 +36,7 @@ export class DeleteUserComponent implements OnInit {
 
   onSubmit() {
     this.spinner.show();
-    this.userService.deleteUser(this.userModel).subscribe(
+    this.userService.deleteUser(this.id).subscribe(
       (response: CommonResponse) => {
         this.toastService.successMessage(response.responseDescription);
         this.dialogRef.close();

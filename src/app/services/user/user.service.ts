@@ -71,9 +71,9 @@ export class UserService {
     return this.httpClient.post(this.requestUrl + `/find-nic`, object, { responseType: 'json', headers: headers });
   }
 
-  deleteUser(object: any): Observable<any> {
+  deleteUser(id: any): Observable<any> {
     const headers = this.getRequestHeaders();
-    return this.httpClient.delete(this.requestUrl, {
+    return this.httpClient.delete(this.requestUrl+ `/`+ `${id}`, {
       responseType: 'json',
       headers: headers
     });

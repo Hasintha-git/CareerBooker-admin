@@ -144,7 +144,7 @@ export class NewAppointmentComponent implements OnInit {
     if (this.firstFormGroup.valid) {
       this.appointmentService.getConsultantBySpecialization(this.searchSpecialization).subscribe(
         (consultant: any) => {
-          this.consultantId = consultant.data.id;
+          this.consultantId = consultant.data.con_id;
           this.consultantModel = consultant.data;
           this.consultantDaysGet();
           this.isDateDisable = false;
@@ -168,6 +168,8 @@ export class NewAppointmentComponent implements OnInit {
 
   consultantDaysGet() {
     this.consultorDays.con_id = this.consultantId
+    console.log(this.consultantId)
+    console.log(this.consultorDays.con_id)
     this.consultantDaysService.getConsultantDaysByCon(this.consultorDays).subscribe(
       (response: any) => {
         this.consultantDaysResponse = response;
