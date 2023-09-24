@@ -14,6 +14,8 @@ import { ConsultantDaysService } from 'src/app/services/consultant-days/consulta
 import { ConsultorService } from 'src/app/services/consultor/consultor.service';
 import { ToastServiceService } from 'src/app/services/toast-service.service';
 import { DatePipe } from '@angular/common';
+import { Router } from '@angular/router';
+import { AuthService } from 'src/app/services/AuthService';
 
 @Component({
   selector: 'app-new-appointment',
@@ -64,7 +66,6 @@ export class NewAppointmentComponent implements OnInit {
     }
 
     for (const disabledDate of this.disabledDates) {
-      console.log(disabledDate.getMonth())
 
       if (
         date.getDate() === disabledDate.getDate() &&
@@ -88,7 +89,9 @@ export class NewAppointmentComponent implements OnInit {
     private consultorService: ConsultorService,
     private sessionStorage: StorageService,
     private cdRef: ChangeDetectorRef,
-    private datePipe: DatePipe
+    private datePipe: DatePipe,
+    private authService: AuthService,
+    private router: Router,
   ) { }
 
   ngOnInit(): void {
@@ -96,11 +99,17 @@ export class NewAppointmentComponent implements OnInit {
     this.isUserChecked = false;
     this.isFinished = false;
     const user = this.sessionStorage.getItem("user");
-    console.log("user", user.username)
     this.consultor.activeUserName = user.user.username;
     this.consultorDays.activeUserName = user.user.username;
     this.userId = user.user.id
     this.availablitySet();
+  }
+
+  private handleUnauthorizedError() {
+    // Clear token and navigate to the login page
+    this.authService.logout();
+    this.router.navigate(['/login']);
+    localStorage.removeItem('token');
   }
 
   availablitySet() {
@@ -137,13 +146,18 @@ export class NewAppointmentComponent implements OnInit {
         (consultant: any) => {
           this.consultantId = consultant.data.id;
           this.consultantModel = consultant.data;
-          console.log(consultant.data.id)
           this.consultantDaysGet();
           this.isDateDisable = false;
           this.isConsultantDisable = true;
-        }, error => {
+        },error => {
           this.spinner.hide();
-          this.toastService.errorMessage(error.error['errorDescription']);
+          if (error.status === 401) {
+            this.handleUnauthorizedError();
+            this.spinner.hide();
+          } else {
+            this.spinner.hide();
+            this.toastService.errorMessage(error.error['errorDescription']);
+          }
         }
       );
     } else {
@@ -158,7 +172,6 @@ export class NewAppointmentComponent implements OnInit {
       (response: any) => {
         this.consultantDaysResponse = response;
         this.availableDates = response.data.availability.daysLists.map(item => item.day.split('T')[0]); // Replace with your actual data
-        console.log(this.availableDates)
         this.availableDates
         for (let index = 0; index < this.availableDates.length; index++) {
           this.disabledDates.push(new Date(this.availableDates[index]));
@@ -167,7 +180,12 @@ export class NewAppointmentComponent implements OnInit {
         this.spinner.hide();
       }, error => {
         this.spinner.hide();
-        this.toastService.errorMessage(error.error['errorDescription']);
+        if (error.status === 401) {
+          this.handleUnauthorizedError();
+        } else {
+
+          this.toastService.errorMessage(error.error['errorDescription']);
+        }
       }
     );
   }
@@ -175,23 +193,19 @@ export class NewAppointmentComponent implements OnInit {
   onDateSelected(event: any) {
     const inputDate = event.value.toISOString().split('T')[0];
 
-    console.log('Input Date:', inputDate);
 
     // Check if consultantDaysResponse is defined and contains the expected properties
     if (!this.consultantDaysResponse?.data?.availability?.daysLists) {
-      console.log('Consultant Days data is missing or does not have the expected structure.');
       return;
     }
 
     const filteredList = this.consultantDaysResponse.data.availability.daysLists
       .filter(item => {
         const itemDate = new Date(item.day).toISOString().split('T')[0];
-        console.log('Item Date:', itemDate);
         return itemDate === inputDate;
       });
 
     if (filteredList.length === 0) {
-      console.log('No slots found for the selected date.');
       this.dayRelatedSlots = [];
       this.isDateDisable = false;
       this.isSlotDisable = true;
@@ -234,29 +248,30 @@ export class NewAppointmentComponent implements OnInit {
 
   onTimeSlotSelected(selectedCode: string) {
     this.isAppoinmentCreate = true;
-    console.log('Selected Time Slot Code:', selectedCode);
   }
 
   submitAppoinment() {
     this.appoinment.consultantId = this.consultantId;
     this.appoinment.activeUserName = this.consultor.activeUserName;
     this.appoinment.userId = this.userId;
-    console.log('>>>>', this.dateControl.value)
     const formattedDate = this.datePipe.transform(this.dateControl.value, 'yyyy-MM-dd');
     this.appoinment.bookedDate = formattedDate;
     this.appoinment.slotId = this.selectedTimeSlot;
     this.appoinment.status = 'active';
 
-    console.log(">>>>>>>>>", this.appoinment)
 
     this.appointmentService.createAppoinment(this.appoinment).subscribe(
       (response: any) => {
-        console.log(response)
         this.toastService.successMessage(response.responseDescription);
         this.spinner.hide();
-      }, error => {
+      },error => {
         this.spinner.hide();
-        this.toastService.errorMessage(error.error['errorDescription']);
+        if (error.status === 401) {
+          this.handleUnauthorizedError();
+        } else {
+
+          this.toastService.errorMessage(error.error['errorDescription']);
+        }
       }
     );
   }

@@ -1,0 +1,42 @@
+<div class="input-dialog-container">
+    <div class="dialog-title">View Specialization</div>
+  
+    <div class="btn-close" (click)="closeDialog()">
+    </div>
+    <div class="title-content-devider"></div>
+  
+    <div class="dialog-input-fields">
+  
+      <div class="view-data">
+        <label for="id" class="label">Specialization ID</label>
+        <p title="{{specializationModel.id | empty}}" class="data">{{specializationModel.id | empty}}</p>
+      </div>
+      <div class="view-data">
+        <label for="Description" class="label">Description</label>
+        <p title="{{specializationModel.name | empty}}" class="data">{{specializationModel.name | empty}}</p>
+      </div>
+      <div class="view-data">
+        <label for="Status" class="label">Status</label>
+        <p title="{{specializationModel.status | empty}}" class="data">{{specializationModel.status | empty}}</p>
+      </div>
+      <div class="view-data">
+        <label for="createdUser" class="label">Created User</label>
+        <p title="{{specializationModel.createdUser | empty}}" class="data">{{specializationModel.createdUser | empty}}</p>
+      </div>
+  
+      <div class="view-data">
+        <label for="lastUpdatedUser" class="label">Last Updated User</label>
+        <p title="{{specializationModel.lastUpdatedUser | empty}}" class="data">{{specializationModel.lastUpdatedUser | empty}}</p>
+      </div>
+  
+      <div class="view-data">
+        <label for="createdTime" class="label">Created Date & Time</label>
+        <p title="{{specializationModel.createdTime | empty}}" class="data">{{specializationModel.createdTime | empty}}</p>
+      </div>
+  
+      <div class="view-data">
+        <label for="lastUpdatedTime" class="label">Last Updated Date & Time</label>
+        <p title="{{specializationModel.lastUpdatedTime | empty}}" class="data">{{specializationModel.lastUpdatedTime | empty}}</p>
+      </div>
+    </div>
+  </div>

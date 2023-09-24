@@ -80,6 +80,7 @@ public access: any;
 
   logoutUser() {
     this.router.navigate(['/login']);
+    localStorage.removeItem('token');
   }
 }
 

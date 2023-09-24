@@ -11,24 +11,24 @@
             </mat-card>
             <mat-list>
                 <button routerLink="dashboard" routerLinkActive="activated-route" class="menu-item" mat-flat-button>
-                      <img class="menu_img" src="../../../assets/icons/dashboard_FILL0_wght400_GRAD0_opsz48.svg" alt="">
+                  <mat-icon>dashboard</mat-icon>
                     <span class="txt_route">Dashboard</span>
                 </button>
             </mat-list>
            
             <mat-list>
-              <button routerLink="schedule" routerLinkActive="activated-route" class="menu-item" mat-flat-button>
-                <mat-icon>schedule</mat-icon>
-                  <span class="txt_route">Schedules</span>
+              <button routerLink="specialization" *ngIf= "access == 'admin'" routerLinkActive="activated-route" class="menu-item" mat-flat-button>
+                <mat-icon>category</mat-icon>
+                  <span class="txt_route">Specialization</span>
               </button>
           </mat-list>
 
-          <mat-list>
+          <!-- <mat-list>
             <button routerLink="schedule" routerLinkActive="activated-route" class="menu-item" mat-flat-button>
-              <mat-icon>local_library</mat-icon>
-                <span class="txt_route">Available Dates</span>
+              <mat-icon>admin_panel_settings</mat-icon>
+                <span class="txt_route">User role</span>
             </button>
-        </mat-list>
+        </mat-list> -->
 
         <mat-list>
           <button routerLink="user" *ngIf= "access == 'admin'" routerLinkActive="activated-route" class="menu-item" mat-flat-button>
@@ -143,13 +143,13 @@
                 P
             </button>
 
-            <mat-menu #menu="matMenu">
-                <button mat-menu-item>
-                  <mat-icon>person</mat-icon>
-                  <span>Register new user</span>
-                </button>
+            <mat-menu #menu="matMenu" style="background-color: transparent;">
+                <!-- <button mat-menu-item>
+                  <mat-icon>phone</mat-icon>
+                  <span>Contact us</span>
+                </button> -->
             
-                <button mat-menu-item  (click)="logoutUser()">
+                <button mat-menu-item style="width: 200px;border-radius: 20px;" (click)="logoutUser()">
                     <mat-icon>logout</mat-icon>
                   <span>Logout</span>
                 </button>

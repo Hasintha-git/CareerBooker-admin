@@ -38,6 +38,19 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { AppointmentComponent } from './appointment/appointment.component';
 import { NewAppointmentComponent } from './appointment/new-appointment/new-appointment.component';
 import { ViewAppointmentComponent } from './appointment/view-appointment/view-appointment.component';
+import { ViewConsultorComponent } from './consultor/view-consultor/view-consultor.component';
+import { DeleteConsultorComponent } from './consultor/delete-consultor/delete-consultor.component';
+import { UpdateConsultorComponent } from './consultor/update-consultor/update-consultor.component';
+import { CancelAppointmentComponent } from './appointment/cancel-appointment/cancel-appointment.component';
+import { AuthGuard } from 'src/app/services/AuthGuard';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { UnauthorizedInterceptor } from 'src/app/services/UnauthorizedInterceptor';
+import { NgxChartsModule } from '@swimlane/ngx-charts';
+import { SpecializationComponent } from './specialization/specialization.component';
+import { ViewSpecializationComponent } from './specialization/view-specialization/view-specialization.component';
+import { EditSpecializationComponent } from './specialization/edit-specialization/edit-specialization.component';
+import { DeleteSpecializationComponent } from './specialization/delete-specialization/delete-specialization.component';
+import { AddSpecializationComponent } from './specialization/add-specialization/add-specialization.component';
 
 @NgModule({
   declarations: [
@@ -53,7 +66,16 @@ import { ViewAppointmentComponent } from './appointment/view-appointment/view-ap
     ConsultorOnboardingComponent,
     AppointmentComponent,
     NewAppointmentComponent,
-    ViewAppointmentComponent
+    ViewAppointmentComponent,
+    ViewConsultorComponent,
+    DeleteConsultorComponent,
+    UpdateConsultorComponent,
+    CancelAppointmentComponent,
+    SpecializationComponent,
+    ViewSpecializationComponent,
+    EditSpecializationComponent,
+    DeleteSpecializationComponent,
+    AddSpecializationComponent
   ],
   imports: [
     CommonModule,
@@ -83,11 +105,19 @@ import { ViewAppointmentComponent } from './appointment/view-appointment/view-ap
     FormsModule,
     MatDatepickerModule,
     MatStepperModule,
-    MatFormFieldModule
+    MatFormFieldModule,
+    NgxChartsModule
   ],
   exports: [
     Empty
   ],
-  providers: [DatePipe],
+  providers: [DatePipe,
+    AuthGuard,
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: UnauthorizedInterceptor,
+      multi: true,
+    }
+  ],
 })
 export class PostLoginModule { }

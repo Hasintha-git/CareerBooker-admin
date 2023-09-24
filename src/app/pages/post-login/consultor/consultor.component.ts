@@ -14,6 +14,9 @@ import { merge, tap } from 'rxjs';
 import { PAGE_LENGTH } from 'src/app/utility/constants/system-config';
 import { CommonFunctionsService } from 'src/app/services/common-functions/common-function.service';
 import { ConsultorOnboardingComponent } from './consultor-onboarding/consultor-onboarding.component';
+import { ViewConsultorComponent } from './view-consultor/view-consultor.component';
+import { DeleteConsultorComponent } from './delete-consultor/delete-consultor.component';
+import { AuthService } from 'src/app/services/AuthService';
 
 @Component({
   selector: 'app-consultor',
@@ -43,6 +46,8 @@ export class ConsultorComponent implements OnInit, OnDestroy {
     private formBuilder: FormBuilder,
     private sessionStorage: StorageService,
     private commonFunctionService: CommonFunctionsService,
+    private authService: AuthService,
+    public toastService: ToastServiceService,
   ) {
   }
 
@@ -79,11 +84,26 @@ export class ConsultorComponent implements OnInit, OnDestroy {
         this.statusList = response.statusList;
         this.specializationList = response.specializationList;
         this.timeSlotList = response.timeSlotList;
+        this.spinner.hide();
       },
       error => {
-        this.toast.errorMessage(error.error['message']);
+        this.spinner.hide();
+        if (error.status === 401) {
+          this.handleUnauthorizedError();
+          this.spinner.hide();
+        } else {
+          this.spinner.hide();
+          this.toastService.errorMessage(error.error['errorDescription']);
+        }
       }
     );
+  }
+
+  private handleUnauthorizedError() {
+    // Clear token and navigate to the login page
+    this.authService.logout();
+    this.router.navigate(['/login']);
+    localStorage.removeItem('token');
   }
 
   ngAfterViewInit() {
@@ -140,7 +160,12 @@ export class ConsultorComponent implements OnInit, OnDestroy {
       },
       error => {
         this.spinner.hide();
-        this.toast.errorMessage(error.error['errorDescription']);
+        if (error.status === 401) {
+          this.handleUnauthorizedError();
+        } else {
+
+          this.toast.errorMessage(error.error['errorDescription']);
+        }
       }
     );
   }
@@ -177,8 +202,7 @@ export class ConsultorComponent implements OnInit, OnDestroy {
     dialogRef.componentInstance.specializationList = this.specializationList;
     dialogRef.componentInstance.timeSlotList = this.timeSlotList;
     dialogRef.afterClosed().subscribe(result => {
-      console.log(`Dialog result: ${result}`);
-      this.initialDataLoader();
+      this.resetUserSearch();
     });
   }
 
@@ -187,11 +211,17 @@ export class ConsultorComponent implements OnInit, OnDestroy {
   }
 
   delete(id: any) {
-    // Implement your logic to delete a user.
+    const dialogRef = this.dialog.open(DeleteConsultorComponent, { data: id, width: '350px', height: '180px' });
+
+    dialogRef.afterClosed().subscribe(result => {
+      this.resetUserSearch();
+    });
   }
 
   view(id: any) {
-    // Implement your logic to view a user.
+    const dialogRef = this.dialog.open(ViewConsultorComponent, { data: id });
+    dialogRef.afterClosed().subscribe(result => {
+    });
   }
 
   ngOnDestroy() {

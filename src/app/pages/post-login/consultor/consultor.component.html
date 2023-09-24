@@ -51,7 +51,7 @@
       </button>
       <button type="reset" mat-button class="custom-button secondary" (click)="resetUserSearch()">Reset
       </button>
-      <button mat-button class="custom-button image-button" (click)="add()">
+      <button *ngIf="access != 'seeker'" mat-button class="custom-button image-button" (click)="add()">
         <img class="table-action-button" src="assets/images/icons/ic_plus.svg" alt="View"> Consultor onboarding
       </button>
     </div>
@@ -72,18 +72,18 @@
             <li>{{user.email}}</li>
             <li>{{user.city}}</li>
         </ul>
-        <button *ngIf="access != 'admin'">VIEW MORE</button>
+        <button *ngIf="access != 'admin'" (click)="view(user.con_id)">VIEW MORE</button>
 
         <div class="card-icons  icn-hover">
-          <a *ngIf="access == 'admin'" class="table-action-buttons-column" title="View">
+          <a *ngIf="access == 'admin'" class="table-action-buttons-column" (click)="view(user.con_id)" title="View">
             <img class="table-action-button " src="assets/images/icons/ic_view.svg" alt="View">
         </a>
-          <a *ngIf="access == 'admin'" class="table-action-buttons-column" title="Delete">
+          <a *ngIf="access == 'admin'" class="table-action-buttons-column" (click)="delete(user.con_id)" title="Delete">
               <img class="table-action-button" src="assets/images/icons/ic_delete.svg" alt="Delete">
           </a>
-          <a *ngIf="access == 'admin'" class="table-action-buttons-column" title="Edit">
+          <!-- <a *ngIf="access == 'admin'" class="table-action-buttons-column" (click)="update(user.con_id)" title="Edit">
               <img class="table-action-button" src="assets/images/icons/ic_edit.svg" alt="Edit">
-          </a>
+          </a> -->
       </div>
 
     </div>

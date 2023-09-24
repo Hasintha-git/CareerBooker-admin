@@ -1,11 +1,13 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { Router } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { SimpleBase } from 'src/app/models/SimpleBase';
 import { StorageService } from 'src/app/models/StorageService';
 import { CommonResponse } from 'src/app/models/response/CommonResponse';
 import { User } from 'src/app/models/user';
+import { AuthService } from 'src/app/services/AuthService';
 import { NicValidationConfigService } from 'src/app/services/nic-validation/nic-validation-condig.service';
 import { ToastServiceService } from 'src/app/services/toast-service.service';
 import { UserService } from 'src/app/services/user/user.service';
@@ -33,7 +35,9 @@ export class EditUserComponent implements OnInit {
     public toastService: ToastServiceService,
     private spinner: NgxSpinnerService,
     private nicValidationConfig: NicValidationConfigService,
-    private sessionStorage: StorageService
+    private sessionStorage: StorageService,
+    private authService: AuthService,
+    private router: Router
   ) {
   }
 
@@ -54,7 +58,6 @@ export class EditUserComponent implements OnInit {
     this.userModelAdd.id = this.id;
     this.userService.get(this.userModelAdd).subscribe(
       (user: any) => {
-        console.log(">", user.data)
         this.userModelAdd = user.data;
         
         const currentUser = this.sessionStorage.getItem("user");
@@ -63,7 +66,12 @@ export class EditUserComponent implements OnInit {
         this.spinner.hide();
       }, error => {
         this.spinner.hide();
-        this.toastService.errorMessage(error.error['errorDescription']);
+        if (error.status === 401) {
+          this.handleUnauthorizedError();
+        } else {
+
+          this.toastService.errorMessage(error.error['errorDescription']);
+        }
       }
       
     );
@@ -72,9 +80,7 @@ export class EditUserComponent implements OnInit {
 
   initialValidator() {
     this.userAdd = this.formBuilder.group({
-      username: this.formBuilder.control('', [
-        Validators.required
-      ]),
+      username: this.formBuilder.control({ value: '', disabled: true }, [Validators.required]),
       fullName: this.formBuilder.control('', [
         Validators.required
       ]),
@@ -99,9 +105,7 @@ export class EditUserComponent implements OnInit {
       address: this.formBuilder.control('', []),
       city: this.formBuilder.control('', []),
       primaryEmail: ['', Validators.email],
-      dateOfBirth: this.formBuilder.control('', [
-        Validators.required
-      ])
+      dateOfBirth: this.formBuilder.control({ value: '', disabled: true }, [Validators.required]),
     });
 
     this.userAdd.get('email').setValidators(Validators.email);
@@ -151,7 +155,12 @@ export class EditUserComponent implements OnInit {
         },
         error => {
           this.spinner.hide();
-          this.toastService.errorMessage(error.error['errorDescription']);
+          if (error.status === 401) {
+            this.handleUnauthorizedError();
+          } else {
+  
+            this.toastService.errorMessage(error.error['errorDescription']);
+          }
         }
       );
     } else {
@@ -160,6 +169,12 @@ export class EditUserComponent implements OnInit {
     }
   }
 
+  private handleUnauthorizedError() {
+    // Clear token and navigate to the login page
+    this.authService.logout();
+    this.router.navigate(['/login']);
+    localStorage.removeItem('token');
+  }
   validateAllFormFields(formGroup: FormGroup) {
     Object.keys(formGroup.controls).forEach(field => {
       const control = formGroup.get(field);

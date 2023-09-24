@@ -1,7 +1,10 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { Router } from '@angular/router';
+import { NgxSpinnerService } from 'ngx-spinner';
 import { CommonResponse } from 'src/app/models/response/CommonResponse';
 import { User } from 'src/app/models/user';
+import { AuthService } from 'src/app/services/AuthService';
 import { ToastServiceService } from 'src/app/services/toast-service.service';
 import { UserService } from 'src/app/services/user/user.service';
 
@@ -19,7 +22,10 @@ export class DeleteUserComponent implements OnInit {
   constructor(private dialogRef: MatDialogRef<DeleteUserComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
     private userService: UserService,
-    public toastService: ToastServiceService) {
+    public toastService: ToastServiceService,
+    private authService: AuthService,
+    private router: Router,
+    private spinner: NgxSpinnerService) {
   }
 
   ngOnInit(): void {
@@ -29,15 +35,31 @@ export class DeleteUserComponent implements OnInit {
 
 
   onSubmit() {
+    this.spinner.show();
     this.userService.deleteUser(this.userModel).subscribe(
       (response: CommonResponse) => {
         this.toastService.successMessage(response.responseDescription);
         this.dialogRef.close();
+        this.spinner.hide();
       },
       error => {
-        this.toastService.errorMessage(error.error['errorDescription']);
+        this.spinner.hide();
+        if (error.status === 401) {
+          this.handleUnauthorizedError();
+        } else {
+          this.spinner.hide();
+          this.toastService.errorMessage(error.error['errorDescription']);
+        }
       }
     );
+  }
+
+  private handleUnauthorizedError() {
+    // Clear token and navigate to the login page
+    this.authService.logout();
+    this.router.navigate(['/login']);
+    localStorage.removeItem('token');
+    this.spinner.hide();
   }
 
   closeDialog() {

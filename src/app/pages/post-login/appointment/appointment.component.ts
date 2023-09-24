@@ -17,6 +17,8 @@ import { NewAppointmentComponent } from './new-appointment/new-appointment.compo
 import { AppointmentService } from 'src/app/services/appointment/appointment.service';
 import { Appoinment } from 'src/app/models/appoinment';
 import { ViewAppointmentComponent } from './view-appointment/view-appointment.component';
+import { CancelAppointmentComponent } from './cancel-appointment/cancel-appointment.component';
+import { AuthService } from 'src/app/services/AuthService';
 
 @Component({
   selector: 'app-appointment',
@@ -49,6 +51,7 @@ export class AppointmentComponent implements OnInit, OnDestroy {
     private formBuilder: FormBuilder,
     private sessionStorage: StorageService,
     private commonFunctionService: CommonFunctionsService,
+    private authService: AuthService
   ) {
   }
 
@@ -59,13 +62,12 @@ export class AppointmentComponent implements OnInit, OnDestroy {
     this.isUserNameDisable = false;
     this.searchModel = new Appoinment();
     this.access = this.sessionStorage.getItem("userrole");
-    this.activeUser=this.sessionStorage.getItem("user");
-    console.log("user",this.activeUser.user.username)
+    this.activeUser = this.sessionStorage.getItem("user");
     this.searchModel.activeUserName = this.activeUser.user.username;
 
-    if(this.access != 'admin') {
+    if (this.access != 'admin') {
       this.searchModel.username = this.searchModel.activeUserName;
-      this.isSearch=true;
+      this.isSearch = true;
       this.isUserNameDisable = true;
     }
     this.searchModel.pageNumber = 0;
@@ -74,7 +76,7 @@ export class AppointmentComponent implements OnInit, OnDestroy {
     this.initialDataLoader();
     this.breakpoint = (window.innerWidth <= 400) ? 1 : 3;
     this.initialForm();
-  
+
   }
 
   initialForm() {
@@ -86,8 +88,8 @@ export class AppointmentComponent implements OnInit, OnDestroy {
       slotId: '',
     });
   }
-  
-  
+
+
 
   onResize(event) {
     this.breakpoint = (event.target.innerWidth <= 400) ? 1 : 3;
@@ -99,9 +101,15 @@ export class AppointmentComponent implements OnInit, OnDestroy {
         this.specializationList = response.specializationList;
         this.timeSlotList = response.timeSlotList;
       },
-        error => {
-          this.toast.errorMessage(error.error['message']);
+      error => {
+        this.spinner.hide();
+        if (error.status === 401) {
+          this.handleUnauthorizedError();
+        } else {
+
+          this.toast.errorMessage(error.error['errorDescription']);
         }
+      }
       );
   }
 
@@ -152,7 +160,6 @@ export class AppointmentComponent implements OnInit, OnDestroy {
     this.appoinmentService.getList(searchParamMap)
       .subscribe((data: any) => {
         this.appoinmentList = data.records;
-        console.log("**",this.appoinmentList)
         this.dataSourceUser.datalist = this.appoinmentList;
         this.dataSourceUser.usersSubject.next(this.appoinmentList);
         this.dataSourceUser.countSubject.next(data.totalRecords);
@@ -160,11 +167,21 @@ export class AppointmentComponent implements OnInit, OnDestroy {
       },
         error => {
           this.spinner.hide();
-          this.toast.errorMessage(error.error['errorDescription']);
+          if (error.status === 401) {
+            this.handleUnauthorizedError();
+          } else {
+
+            this.toast.errorMessage(error.error['errorDescription']);
+          }
         }
       );
   }
-
+  private handleUnauthorizedError() {
+    // Clear token and navigate to the login page
+    this.authService.logout();
+    this.router.navigate(['/login']);
+    localStorage.removeItem('token');
+  }
   getSearchString(searchParamMap: Map<string, any>, searchModel: Appoinment): Map<string, string> {
     if (searchModel.username) {
       searchParamMap.set("username", searchModel.username);
@@ -191,14 +208,17 @@ export class AppointmentComponent implements OnInit, OnDestroy {
 
   resetUserSearch() {
     this.userSearch.reset();
-    console.log(this.activeUser)
-    console.log(this.access)
-    if(this.access != 'admin') {
-      console.log("************",this.activeUser.user.username)
+
+    if (this.access != 'admin') {
       this.searchModel.username = this.activeUser.user.username;
-      this.isSearch=true;
+      this.isSearch = true;
       this.isUserNameDisable = true;
+    } else {
+      this.searchModel.username = '';
+      this.isSearch = false;
+      this.isUserNameDisable = false;
     }
+
     this.initialDataLoader();
   }
 
@@ -208,8 +228,7 @@ export class AppointmentComponent implements OnInit, OnDestroy {
     dialogRef.componentInstance.specializationList = this.specializationList;
     dialogRef.componentInstance.timeSlotList = this.timeSlotList;
     dialogRef.afterClosed().subscribe(result => {
-      console.log(`Dialog result: ${result}`);
-      this.initialDataLoader();
+      this.resetUserSearch();
     });
   }
 
@@ -217,15 +236,22 @@ export class AppointmentComponent implements OnInit, OnDestroy {
     // Implement your logic to edit a user.
   }
 
-  delete(id: any) {
-    // Implement your logic to delete a user.
+  cancel(id: any, status: any) {
+    if (status != "cancel") {
+      const dialogRef = this.dialog.open(CancelAppointmentComponent, { data: id, width: '350px', height: '180px' });
+
+      dialogRef.afterClosed().subscribe(result => {
+        this.resetUserSearch();
+      });
+    } else {
+      this.toast.errorMessage("Appointment already canceled");
+    }
+
   }
 
   view(id: any) {
-    console.log("clicked", id)
     const dialogRef = this.dialog.open(ViewAppointmentComponent, { data: id });
     dialogRef.afterClosed().subscribe(result => {
-      console.log(`Dialog result: ${result}`);
     });
   }
 

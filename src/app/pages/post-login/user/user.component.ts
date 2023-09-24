@@ -20,6 +20,7 @@ import { DeleteUserComponent } from './delete-user/delete-user.component';
 import { EditUserComponent } from './edit-user/edit-user.component';
 import { AddUserComponent } from './add-user/add-user.component';
 import { StorageService } from 'src/app/models/StorageService';
+import { AuthService } from 'src/app/services/AuthService';
 
 @Component({
   selector: 'app-user',
@@ -53,7 +54,7 @@ export class UserComponent implements OnInit, AfterViewInit, OnDestroy {
     private formBuilder: FormBuilder,
     private activatedRoute: ActivatedRoute,
     private commonFunctionService: CommonFunctionsService,
-
+    private authService: AuthService
   ) {
   }
 
@@ -80,10 +81,8 @@ export class UserComponent implements OnInit, AfterViewInit, OnDestroy {
   prepareReferenceData(): void {
     this.userService.getSearchData(true)
       .subscribe((response: any) => {
-        console.log(response)
         this.statusList = response.statusList;
         this.userRoleList = response.userRoleList;
-        console.log(this.statusList)
       },
         error => {
           this.toast.errorMessage(error.error['message']);
@@ -127,20 +126,31 @@ export class UserComponent implements OnInit, AfterViewInit, OnDestroy {
     }
     this.userService.getList(searchParamMap)
       .subscribe((data: DataTable<User>) => {
-        console.log("data>" + data)
         this.userList = data.records;
         this.dataSourceUser.datalist = this.userList;
         this.dataSourceUser.usersSubject.next(this.userList);
         this.dataSourceUser.countSubject.next(data.totalRecords);
         this.spinner.hide();
       },
-        error => {
-          this.spinner.hide();
+      error => {
+        this.spinner.hide();
+        if (error.status === 401) {
+          this.handleUnauthorizedError();
+        } else {
+
           this.toast.errorMessage(error.error['errorDescription']);
         }
+      }
       );
   }
 
+  
+  private handleUnauthorizedError() {
+    // Clear token and navigate to the login page
+    this.authService.logout();
+    this.router.navigate(['/login']);
+    localStorage.removeItem('token');
+  }
   getSearchString(searchParamMap: Map<string, any>, searchModel: User): Map<string, string> {
     if (searchModel.username) {
       searchParamMap.set(this.displayedColumns[1].toString(), searchModel.username);
@@ -184,7 +194,7 @@ export class UserComponent implements OnInit, AfterViewInit, OnDestroy {
     dialogRef.componentInstance.statusList = this.statusList;
     dialogRef.componentInstance.userRoleList = this.userRoleList;
     dialogRef.afterClosed().subscribe(result => {
-      console.log(`Dialog result: ${result}`);
+      this.resetUserSearch();
     });
   }
 
@@ -193,7 +203,7 @@ export class UserComponent implements OnInit, AfterViewInit, OnDestroy {
     dialogRef.componentInstance.statusList = this.statusList;
     dialogRef.componentInstance.userRoleList = this.userRoleList;
     dialogRef.afterClosed().subscribe(result => {
-      console.log(`Dialog result: ${result}`);
+      this.resetUserSearch();
     });
   }
 
@@ -201,14 +211,13 @@ export class UserComponent implements OnInit, AfterViewInit, OnDestroy {
     const dialogRef = this.dialog.open(DeleteUserComponent, { data: id, width: '350px', height: '180px' });
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log(`Dialog result: ${result}`);
+      this.resetUserSearch();
     });
   }
 
   view(id: any) {
     const dialogRef = this.dialog.open(ViewUserComponent, { data: id });
     dialogRef.afterClosed().subscribe(result => {
-      console.log(`Dialog result: ${result}`);
     });
   }
 

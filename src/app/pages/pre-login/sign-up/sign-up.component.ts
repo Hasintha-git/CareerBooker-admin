@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { UserResponse } from 'src/app/models/response/user-response';
@@ -7,6 +7,7 @@ import { User } from 'src/app/models/user';
 import { UserService } from 'src/app/services/user/user.service';
 import { NgxSpinnerService } from "ngx-spinner";
 import { ToastServiceService } from 'src/app/services/toast-service.service';
+import { NicValidationConfigService } from 'src/app/services/nic-validation/nic-validation-condig.service';
 
 @Component({
   selector: 'app-sign-up',
@@ -27,7 +28,8 @@ export class SignUpComponent implements OnInit {
     private spinner: NgxSpinnerService,
     private routerLink: Router, 
     private formBuilder: FormBuilder,
-    private userService: UserService
+    private userService: UserService,
+    private nicValidationConfig: NicValidationConfigService,
     ) { }
 
   ngOnInit(): void {
@@ -38,7 +40,11 @@ export class SignUpComponent implements OnInit {
   this.userForm1 = this.formBuilder.group({
     username : this.formBuilder.control('', [Validators.required]),
     fullName : this.formBuilder.control('', [Validators.required]),
-    nic : this.formBuilder.control('', [Validators.required]),
+    nic: this.formBuilder.control('', [
+      Validators.required,
+      Validators.maxLength(12),
+      Validators.pattern(/^([0-9]{9}[X|V|v]|[0-9]{12})$/),
+    ]),
     dateOfBirth : this.formBuilder.control('', [Validators.required])
   });
 
@@ -52,17 +58,25 @@ export class SignUpComponent implements OnInit {
   this.userForm3 = this.formBuilder.group({
     password : this.formBuilder.control('', [Validators.required]),
     confirmPassword : this.formBuilder.control('', [Validators.required])
+  }, {
+    // Add a custom validator to check if the passwords match
+    validator: this.passwordsMatchValidator
   });
   }
 
+  passwordsMatchValidator(formGroup: FormGroup) {
+    const password = formGroup.get('password').value;
+    const confirmPassword = formGroup.get('confirmPassword').value;
+  
+
+    if (password === confirmPassword) {
+      return null; // Passwords match, return null (no error)
+    } else {
+      return { passwordsNotMatch: true }; // Passwords don't match, return an error object
+    }
+  }
   firstTab() {
-    // if (this.userForm1.valid) {
       this.isNext = '1';
-    // }else {
-    //   this.spinner.hide();
-    //   this.toastr.errorMessage('Please fill in all required fields');
-    //   this.mandatoryValidation(this.userForm1)
-    // }
   }
 
   secondTab() {
@@ -92,9 +106,9 @@ export class SignUpComponent implements OnInit {
   onSubmit() {
     this.spinner.show();
     if (this.userForm3.valid) {
-      this.userService.userRegister(this.signUpModel).subscribe((userResponse: any)=> {
-        this.toastr.successMessage(userResponse.msg);
-        // this.routerLink.navigateByUrl('/login')
+      this.userService.preRegistration(this.signUpModel).subscribe((userResponse: any)=> {
+        this.toastr.successMessage(userResponse.responseDescription);
+        this.routerLink.navigateByUrl('/login')
         this.userForm3.reset();
         Object.keys(this.userForm3.controls).forEach(key => {
           const control = this.userForm3.controls[key];
@@ -105,12 +119,32 @@ export class SignUpComponent implements OnInit {
       },
       error => {
         this.spinner.hide();
-        this.toastr.errorMessage(error);
+        this.toastr.errorMessage(error.error['errorDescription']);
       })
     } else {
       this.spinner.hide();
       this.toastr.errorMessage('Please fill in all required fields');
       this.mandatoryValidation(this.userForm3)
+    }
+  }
+
+  customNicValidator(isValid: boolean): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      if (isValid) {
+        return null; // Return null if the NIC is valid
+      } else {
+        return { invalidNic: true }; // Return an error object if the NIC is invalid
+      }
+    };
+  }
+
+  onNicInputChange(event: any) {
+    if (this.userForm1.get('nic').valid) {
+      const inputValue = event.target.value;
+      const dob = this.nicValidationConfig.extractBirthday(inputValue);
+      this.signUpModel.dateOfBirth = dob;
+    } else {
+      this.signUpModel.dateOfBirth = null;
     }
   }
 

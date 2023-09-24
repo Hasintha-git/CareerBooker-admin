@@ -1,11 +1,11 @@
-<form class="main-form">
+<form class="main-form" *ngIf="!isUserNameDisable">
   <div class="common-input-field-section">
 
     <div class="input-fields">
       <mat-form-field class="min-field" appearance="outline">
         <mat-label>User Name</mat-label>
         <input matInput type="text" [formControl]="username" [(ngModel)]="searchModel.username" appRegex
-          regexType="letter_num_space" [attr.maxlength]="20" />
+          regexType="letter_num_space" [attr.maxlength]="20"  />
       </mat-form-field>
     </div>
 
@@ -71,6 +71,7 @@
       <h3>{{appointment.bookedSlot}}</h3>
       <div class="coast">
         <h2>{{appointment.bookedDate}}</h2>
+        <h3>Status : {{appointment.statusDescription}}</h3>
       </div>
       <ul>
         <li>Appointment User : {{appointment.userName}}</li>
@@ -83,11 +84,8 @@
         <a *ngIf="access == 'admin'" class="table-action-buttons-column" (click)="view(appointment.appointmentId)" title="View">
           <img class="table-action-button " src="assets/images/icons/ic_view.svg" alt="View">
         </a>
-        <a *ngIf="access == 'admin'" class="table-action-buttons-column" title="Delete">
-          <img class="table-action-button" src="assets/images/icons/ic_delete.svg" alt="Delete">
-        </a>
-        <a *ngIf="access == 'admin'" class="table-action-buttons-column" title="Edit">
-          <img class="table-action-button" src="assets/images/icons/ic_edit.svg" alt="Edit">
+        <a *ngIf="access == 'admin'" class="table-action-buttons-column" (click)="cancel(appointment.appointmentId,appointment.status)" title="Delete">
+          <img class="table-action-button custom-svg-color" src="assets/images/icons/ic_device_information.svg" alt="Delete">
         </a>
       </div>
 

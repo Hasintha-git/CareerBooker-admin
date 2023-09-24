@@ -27,19 +27,27 @@
             <div style="display: flex;flex-direction: column;">
                 <label style="font-weight: 500;">NIC</label>
                 <mat-form-field class="ultra-max-field" appearance="outline" >
-                    <input matInput placeholder="1999********" formControlName="nic"  [(ngModel)]="signUpModel.nic">
-                    <mat-error *ngIf="nic?.hasError('required')">Full name cannot be empty
+                    <input matInput placeholder="1999********" [maxlength]="12" formControlName="nic"  [(ngModel)]="signUpModel.nic"
+                    autoComplete='off'
+                    onkeyup="$(this).val($(this).val().replace(/[^0-9xXvV]/g,''));this.value = this.value.toUpperCase();"
+                    onmouseout="$(this).val($(this).val().replace(/[^0-9xXvV]/g,''));this.value = this.value.toUpperCase();"
+                    (change)="onNicInputChange($event)">
+                    <mat-error *ngIf="nic.hasError('required')">NIC cannot be empty</mat-error>
+                    <mat-error *ngIf="nic.hasError('pattern')">Invalid NIC
                     </mat-error>
                 </mat-form-field>
             </div>
-            <div style="display: flex;flex-direction: column;">
-                <label style="font-weight: 500;">Date Of Birth</label>
-                <mat-form-field class="ultra-max-field" appearance="outline" >
-                    <input matInput placeholder="1999-01-01" formControlName="dateOfBirth"  [(ngModel)]="signUpModel.dateOfBirth">
-                    <mat-error *ngIf="dateOfBirth?.hasError('required')">Date of birth cannot be empty
-                    </mat-error>
-                </mat-form-field>
+
+            <div style="display: flex;flex-direction: column;width: 300px;">
+            <mat-form-field class="ultra-max-field"  appearance="outline">
+                <mat-label>Choose a date</mat-label>
+                <input matInput [matDatepicker]="picker" formControlName="dateOfBirth"  disabled =true  [(ngModel)]="signUpModel.dateOfBirth">
+                <mat-hint>MM/DD/YYYY</mat-hint>
+                <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+              </mat-form-field>
             </div>
+
             <div class="login-side1-row">
                 <button class="btn-first" type="button" (click)="secondTab()"  mat-flat-button>Next</button>    
             </div>
@@ -83,7 +91,8 @@
             <div style="display: flex;flex-direction: column;">
                 <label style="font-weight: 500;">Mobile no</label>
                 <mat-form-field class="ultra-max-field" appearance="outline" >
-                    <input matInput placeholder="mobileNo" formControlName="mobileNo"  [(ngModel)]="signUpModel.mobileNo">
+                    <input matInput placeholder="mobileNo" appRegexFormate
+                    regexType="number" formControlName="mobileNo" [maxlength]="10"  [(ngModel)]="signUpModel.mobileNo">
                     <mat-error *ngIf="mobileNo?.hasError('required')">Mobile No cannot be empty
                     </mat-error>
                 </mat-form-field>
@@ -99,38 +108,44 @@
 
           <div class="login-side1-div" *ngIf="isNext == '3'">
 
-            <form  [formGroup]="userForm3">
-              <div style="display: flex;flex-direction: column;">
-                  <label style="font-weight: 500;">Password</label>  
-                  <mat-form-field class="ultra-max-field" appearance="outline">
-                      <input matInput  placeholder="password" [type]="hide ? 'password' : 'text'" formControlName="password"  [(ngModel)]="signUpModel.password">
-                      <button mat-icon-button type="button" matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'"
-                          [attr.aria-pressed]="hide" type="button">
-                          <mat-icon style="color: gray;">{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
-                      </button>
-                      <mat-error *ngIf="password?.hasError('required')">Password cannot be empty
-                      </mat-error>
-                  </mat-form-field>
-              </div>
-
+            <form [formGroup]="userForm3" (ngSubmit)="onSubmit()">
+  <!-- Password field -->
+<div style="display: flex; flex-direction: column;">
+    <label style="font-weight: 500;">Password</label>
+    <mat-form-field class="ultra-max-field" appearance="outline">
+      <input matInput placeholder="password" [type]="hide ? 'password' : 'text'" formControlName="password"
+        [(ngModel)]="signUpModel.password">
+      <button mat-icon-button type="button" matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'"
+        [attr.aria-pressed]="hide" type="button">
+        <mat-icon style="color: gray;">{{ hide ? 'visibility_off' : 'visibility' }}</mat-icon>
+      </button>
+      <mat-error *ngIf="userForm3.hasError('passwordsNotMatch')">Passwords do not match</mat-error>
+      <mat-error *ngIf="userForm3.get('password')?.hasError('required')">Password cannot be empty</mat-error>
+    </mat-form-field>
+  </div>
+  
+  <!-- Confirm Password field -->
+  <div style="display: flex; flex-direction: column;">
+    <label style="font-weight: 500;">Confirm Password</label>
+    <mat-form-field class="ultra-max-field" appearance="outline">
+      <input matInput placeholder="password" [type]="hide ? 'password' : 'text'" formControlName="confirmPassword"
+        [(ngModel)]="signUpModel.confirmPassword">
+      <button mat-icon-button type="button" matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'"
+        [attr.aria-pressed]="hide" type="button">
+        <mat-icon style="color: gray;">{{ hide ? 'visibility_off' : 'visibility' }}</mat-icon>
+      </button>
+      <mat-error *ngIf="userForm3.hasError('passwordsNotMatch')">Passwords do not match</mat-error>
+      <mat-error *ngIf="userForm3.get('confirmPassword')?.hasError('required')">Confirm Password cannot be empty</mat-error>
+    </mat-form-field>
+  </div>
+  
+  
+                <div class="login-side1-row">
+                    <button class="btn-back" type="button" (click)="secondTab()"  mat-flat-button>Back</button>
+                    <button class="btn-login" type="submit"  mat-flat-button>Register</button>
+                </div>
+              </form>
               
-              <div style="display: flex;flex-direction: column;">
-                <label style="font-weight: 500;">Confirm Password</label>  
-                <mat-form-field class="ultra-max-field" appearance="outline">
-                    <input matInput  placeholder="password" [type]="hide ? 'password' : 'text'" formControlName="confirmPassword"  [(ngModel)]="signUpModel.password">
-                    <button mat-icon-button type="button" matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'"
-                        [attr.aria-pressed]="hide" type="button">
-                        <mat-icon style="color: gray;">{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
-                    </button>
-                    <mat-error *ngIf="confirmPassword?.hasError('required')">Confirm Password cannot be empty
-                    </mat-error>
-                </mat-form-field>
-            </div>
-              <div class="login-side1-row">
-                  <button class="btn-back" type="button" (click)="secondTab()"  mat-flat-button>Back</button>
-                  <button class="btn-login" type="submit"  mat-flat-button>Register</button>
-              </div>
-            </form>
           </div>
     </div>
 </div>

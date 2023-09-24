@@ -15,7 +15,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import { MatInputModule } from '@angular/material/input';
 import { MatRadioModule } from '@angular/material/radio';
-import { HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { StorageService } from './models/StorageService';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
@@ -26,6 +26,8 @@ import {MatDatepickerModule} from '@angular/material/datepicker';
 import {MatToolbarModule} from '@angular/material/toolbar';
 import {MatStepperModule} from '@angular/material/stepper';
 import { MatChipsModule } from '@angular/material/chips';
+import { TokenInterceptor } from './services/TokenInterceptor';
+import { UnauthorizedInterceptor } from './services/UnauthorizedInterceptor';
 
 @NgModule({
   declarations: [
@@ -67,7 +69,7 @@ import { MatChipsModule } from '@angular/material/chips';
   providers: [
     StorageService,
     { provide: 'LOCAL_STORAGE', useFactory: () => window.localStorage },
-    { provide: 'SESSION_STORAGE', useFactory: () => window.sessionStorage }
+    { provide: 'SESSION_STORAGE', useFactory: () => window.sessionStorage },
   ],
   bootstrap: [AppComponent]
 })

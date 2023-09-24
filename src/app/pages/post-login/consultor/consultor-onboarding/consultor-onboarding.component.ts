@@ -5,6 +5,7 @@ import { MatDialogRef } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatStepper, MatStepperModule } from '@angular/material/stepper';
+import { Router } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { SimpleBase } from 'src/app/models/SimpleBase';
 import { StorageService } from 'src/app/models/StorageService';
@@ -12,6 +13,7 @@ import { Consultor } from 'src/app/models/consultor';
 import { ConsultorDays } from 'src/app/models/consultorDays';
 import { SlotDtoList } from 'src/app/models/slotDtoList';
 import { User } from 'src/app/models/user';
+import { AuthService } from 'src/app/services/AuthService';
 import { ConsultantDaysService } from 'src/app/services/consultant-days/consultant-days.service';
 import { ConsultorService } from 'src/app/services/consultor/consultor.service';
 import { ToastServiceService } from 'src/app/services/toast-service.service';
@@ -53,7 +55,9 @@ export class ConsultorOnboardingComponent implements OnInit {
     private spinner: NgxSpinnerService,
     private consultorService: ConsultorService,
     private consultantDaysService: ConsultantDaysService,
-    private sessionStorage: StorageService
+    private sessionStorage: StorageService,
+    private authService: AuthService,
+    private router: Router,
   ) { }
 
   ngOnInit(): void {
@@ -61,7 +65,6 @@ export class ConsultorOnboardingComponent implements OnInit {
     this.isUserChecked = false;
     this.isFinished =false;
     const user=this.sessionStorage.getItem("user");
-    console.log("user",user.username)
     this.consultor.activeUserName = user.user.username;
     this.consultorDays.activeUserName = user.user.username;
   }
@@ -85,6 +88,12 @@ export class ConsultorOnboardingComponent implements OnInit {
         Validators.required
       ]),
     })
+  }
+  private handleUnauthorizedError() {
+    // Clear token and navigate to the login page
+    this.authService.logout();
+    this.router.navigate(['/login']);
+    localStorage.removeItem('token');
   }
 
   isSelected = (event: any) => {
@@ -120,10 +129,15 @@ export class ConsultorOnboardingComponent implements OnInit {
           this.userModel = user.data;
           this.spinner.hide();
           this.isUserChecked = true;
-        }, error => {
+        },  error => {
           this.spinner.hide();
-          this.userModel.nic = '';
-          this.toastService.errorMessage(error.error['errorDescription']);
+          if (error.status === 401) {
+            this.handleUnauthorizedError();
+            this.spinner.hide();
+          } else {
+            this.spinner.hide();
+            this.toastService.errorMessage(error.error['errorDescription']);
+          }
         }
       );
     } else {
@@ -133,9 +147,6 @@ export class ConsultorOnboardingComponent implements OnInit {
   }
 
   checkModification() {
-    console.log("checked")
-    console.log(this.selectedSlotList)
-    console.log(this.daysSelected)
     this.consultorDays.slotDtoList = [];
 
     for (let index = 0; index < this.daysSelected.length; index++) {
@@ -146,18 +157,12 @@ export class ConsultorOnboardingComponent implements OnInit {
       this.consultorDays.slotDtoList.push(slotDto);
     }
 
-    console.log("list", this.consultorDays.slotDtoList);
     this.isFinished=true;
 
   }
 
   updateSlotDtoList(dto: any, i: number) {
-    // Assuming you want to update the first item in slotDtoList
-    // this.consultorDays.slotDtoList[0].timeSlots = selectedTimeSlots;
-    console.log(dto);
-    console.log(i)
 
-    // You can add more logic here to update other parts of slotDtoList if needed
   }
 
 
@@ -167,7 +172,6 @@ export class ConsultorOnboardingComponent implements OnInit {
       this.spinner.hide();
       this.toastService.successMessage(response.responseDescription);
           this.dialogRef.close();
-      console.log(response)
     }, error => {
       this.spinner.hide();
       this.toastService.errorMessage(error.error['errorDescription']);
@@ -182,7 +186,6 @@ export class ConsultorOnboardingComponent implements OnInit {
       this.consultorService.add(this.consultor).subscribe(
         (reponse: any) => {
           this.consultorDays.con_id = reponse.data;
-          console.log(">>>>>>>>",this.consultorDays.con_id)
           this.stepper.next();
           this.spinner.hide();
         }, error => {
