@@ -1,0 +1,124 @@
+<div class="input-dialog-container_auto">
+  <div class="btn-close" (click)="closeDialog()">
+  </div>
+  <mat-stepper linear #stepper>
+    <mat-step [editable]="isEditable">
+      <form  [formGroup]="firstFormGroup">
+        <ng-template matStepLabel>Onboard Consultant</ng-template>
+        <div style="display: flex;align-items: center;height: 55px; ">
+          <div class="input-fields" style="height: 45px; ">
+
+            <mat-form-field class="min-field" appearance="outline">
+              <mat-label>Specialization</mat-label> 
+              <mat-select [disabled]="isConsultantDisable" [formControl]="spe_id" required [(ngModel)]="searchSpecialization" (selectionChange)="consultantFind()">
+                <mat-option *ngFor="let st of specializationList" [value]="st.id">
+                  {{st.description}}
+                </mat-option>
+              </mat-select>
+              <mat-error *ngIf="spe_id.hasError('required')">Specialization cannot be empty
+              </mat-error>
+            </mat-form-field>
+          </div>
+          <div>
+          </div>
+        </div>
+
+      </form>
+      <br>
+      <div class="dialog-input-fields">
+        <div class="view-data">
+          <label for="Username" class="label">Username</label>
+          <p title="{{consultantModel.username | empty}}" class="data">{{consultantModel.username | empty}}</p>
+        </div>
+        <div class="view-data">
+          <label for="Username" class="label">Full Name</label>
+          <p title="{{consultantModel.fullName | empty}}" class="data">{{consultantModel.fullName | empty}}</p>
+        </div>
+        <div class="view-data">
+          <label for="NIC" class="label">NIC</label>
+          <p title="{{consultantModel.nic | empty}}" class="data">{{consultantModel.nic | empty}}</p>
+        </div>
+        <div class="view-data">
+          <label for="Date of Birth" class="label">Date of Birth</label>
+          <p title="{{consultantModel.dateOfBirth | empty}}" class="data">{{consultantModel.dateOfBirth | empty}}</p>
+        </div>
+        <div class="view-data">
+          <label for="Status" class="label">Status</label>
+          <p title="{{consultantModel.status | empty}}" class="data">{{consultantModel.status | empty}}</p>
+        </div>
+        <div class="view-data">
+          <label for="Email" class="label">Email</label>
+          <p title="{{consultantModel.email | empty}}" class="data">{{consultantModel.email | empty}}</p>
+        </div>
+        <div class="view-data">
+          <label for="Contact Number" class="label">Contact Number</label>
+          <p title="{{consultantModel.mobileNo | empty}}" class="data">{{consultantModel.mobileNo | empty}}</p>
+        </div>
+        <div class="view-data">
+          <label for="Address" class="label">Address</label>
+          <p title="{{consultantModel.address | empty}}" class="data">{{consultantModel.address | empty}}</p>
+        </div>
+        <div class="view-data">
+          <label for="City" class="label">City</label>
+          <p title="{{consultantModel.city | empty}}" class="data">{{consultantModel.city | empty}}</p>
+        </div>
+
+        <!-- <div class="input-fields"> -->
+          <mat-form-field class="min-field" appearance="outline">
+            <input
+              matInput
+              [matDatepicker]="picker"
+              [formControl]="dateControl"
+              [matDatepickerFilter]="dateFilter"
+              (dateChange)="onDateSelected($event)"
+              placeholder="Select Free Date"
+              [disabled]="isDateDisable"
+            />
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+          </mat-form-field>
+          
+          
+          <mat-form-field class="min-field" appearance="outline">
+            <mat-label>Available Time Slot</mat-label>
+            <mat-select  [disabled]="isSlotDisable" [formControl]="slot" required [(ngModel)]="selectedTimeSlot" (selectionChange)="onTimeSlotSelected($event.value)">
+              <mat-option *ngFor="let st of dayRelatedSlots" [value]="st.code">
+                {{st.description}}
+              </mat-option>
+            </mat-select>
+            <mat-error *ngIf="dayRelatedSlots.length  === 0">Time Slot Not available Please pick another day
+            </mat-error>
+          </mat-form-field>
+          
+          
+        <!-- </div> -->
+
+      </div>
+
+
+
+
+      <div style="width: 100%; display: flex;justify-content: flex-end;">
+        <button  type="reset" mat-button class="custom-button primary"
+          (click)="resetAppoinment()">Reset</button>
+        <button [disabled]="!isAppoinmentCreate" type="button" mat-button class="custom-button primary"
+          (click)="submitAppoinment()">Create Appoinment</button>
+      </div>
+
+    </mat-step>
+
+    <!-- <mat-step>
+      <ng-template matStepLabel>Done</ng-template>
+  
+  
+      <div>
+        <button mat-button matStepperPrevious>Back</button>
+        <button mat-button (click)="stepper.reset()">Reset</button>
+      </div>
+    </mat-step> -->
+
+
+  </mat-stepper>
+
+
+</div>

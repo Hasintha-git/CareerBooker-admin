@@ -1,0 +1,42 @@
+.mat-stepper-horizontal {
+    margin-top: 8px;
+}
+
+.mat-mdc-form-field {
+    margin-top: 16px;
+}
+
+.mat-calendar-body-cell.selected {
+    background-color: #1877F2 !important;
+    border-radius: 50%;
+}
+
+.drop-calendar {
+    width: 30rem
+}
+
+.example-box.cdk-drag-animating {
+    transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.example-chip .cdk-drop-list-dragging {
+    transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+
+.date-selection-header {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    flex-direction: column;
+    text-align: flex-start;
+    /* Add padding for spacing */
+    font-family: "Arial", sans-serif;
+    /* Change the font family to your preferred modern font */
+    font-size: 18px;
+    /* Adjust the font size as needed */
+    color: #333;
+    /* Change the text color to your preferred modern color */
+}
+
+/* Add any additional styles or adjustments as needed */

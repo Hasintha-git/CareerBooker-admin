@@ -1,0 +1,59 @@
+<div class="input-dialog-container">
+    <div class="dialog-title">View Appointment</div>
+  
+    <div class="btn-close" (click)="closeDialog()">
+    </div>
+    <div class="title-content-devider"></div>
+  
+    <div class="dialog-input-fields">
+  
+        <div class="view-data">
+            <label for="appointmentId" class="label">Appointment Id</label>
+            <p title="{{appoinmentModel.appointmentId | empty}}" class="data">{{appoinmentModel.appointmentId | empty}}</p>
+          </div>
+      <div class="view-data">
+        <label for="bookedDate" class="label">Booked Date</label>
+        <p title="{{appoinmentModel.bookedDate | empty}}" class="data">{{appoinmentModel.bookedDate | empty}}</p>
+      </div>
+      <div class="view-data">
+        <label for="bookedSlot" class="label">bookedSlot</label>
+        <p title="{{appoinmentModel.bookedSlot | empty}}" class="data">{{appoinmentModel.bookedSlot | empty}}</p>
+      </div>
+      <div class="view-data">
+        <label for="consultantSpecialize" class="label">Consultant Specialize</label>
+        <p title="{{appoinmentModel.consultantSpecialize | empty}}" class="data">{{appoinmentModel.consultantSpecialize
+            | empty}}</p>
+      </div>
+      <div class="view-data">
+        <label for="consultantUserName" class="label">consultantUserName</label>
+        <p title="{{appoinmentModel.consultantUserName | empty}}" class="data">{{appoinmentModel.consultantUserName | empty}}</p>
+      </div>
+      <div class="view-data">
+        <label for="Status" class="label">Status</label>
+        <p title="{{appoinmentModel.statusDescription | empty}}" class="data">{{appoinmentModel.statusDescription | empty}}</p>
+      </div>
+      <div class="view-data">
+        <label for="userName" class="label">User Name</label>
+        <p title="{{appoinmentModel.userName | empty}}" class="data">{{appoinmentModel.userName | empty}}</p>
+      </div>
+
+      <div class="view-data">
+        <label for="createdUser" class="label">Created User</label>
+        <p title="{{appoinmentModel.createdUser | empty}}" class="data">{{appoinmentModel.createdUser | empty}}</p>
+      </div>
+      <div class="view-data">
+        <label for="lastUpdatedUser" class="label">Last Updated User</label>
+        <p title="{{appoinmentModel.lastUpdatedUser | empty}}" class="data">{{appoinmentModel.lastUpdatedUser | empty}}</p>
+      </div>
+      <div class="view-data">
+        <label for="createdTime" class="label">Created date & Time</label>
+        <p title="{{appoinmentModel.createdTime | empty}}" class="data">{{appoinmentModel.createdTime | empty}}</p>
+      </div>
+      <div class="view-data">
+        <label for="lastUpdatedTime" class="label">Last Updated date & Time</label>
+        <p title="{{appoinmentModel.lastUpdatedTime | empty}}" class="data">{{appoinmentModel.lastUpdatedTime | empty}}</p>
+      </div>
+      
+      
+    </div>
+  </div>

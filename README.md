@@ -1,2 +1,1 @@
-# CareerBooker-server
 # CareerBooker-admin

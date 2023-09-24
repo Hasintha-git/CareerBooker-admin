@@ -1,0 +1,164 @@
+<link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+<mat-sidenav-container class="post-login-container" autosize>
+    <mat-sidenav #sidenav id="sidenav" class="post-login-sidenav" mode="side" [class.menu-open]="isVisible"
+        [class.menu-close]="!isVisible" opened>
+        <mat-list id="menus">
+            <mat-card class="mat-elevation-z0">
+                <mat-card-header style="display: flex;justify-content: center;">
+                    <img class="post-login-logo" src="../../../assets/images/careerbooker.png" routerLink="/post-login/dashboard"  alt="">
+                </mat-card-header>
+            </mat-card>
+            <mat-list>
+                <button routerLink="dashboard" routerLinkActive="activated-route" class="menu-item" mat-flat-button>
+                  <mat-icon>dashboard</mat-icon>
+                    <span class="txt_route">Dashboard</span>
+                </button>
+            </mat-list>
+           
+            <mat-list>
+              <button routerLink="specialization" *ngIf= "access == 'admin'" routerLinkActive="activated-route" class="menu-item" mat-flat-button>
+                <mat-icon>category</mat-icon>
+                  <span class="txt_route">Specialization</span>
+              </button>
+          </mat-list>
+
+          <!-- <mat-list>
+            <button routerLink="schedule" routerLinkActive="activated-route" class="menu-item" mat-flat-button>
+              <mat-icon>admin_panel_settings</mat-icon>
+                <span class="txt_route">User role</span>
+            </button>
+        </mat-list> -->
+
+        <mat-list>
+          <button routerLink="user" *ngIf= "access == 'admin'" routerLinkActive="activated-route" class="menu-item" mat-flat-button>
+            <mat-icon>people</mat-icon>
+              <span class="txt_route">System user</span>
+          </button>
+      </mat-list>
+
+      <mat-list>
+        <button routerLink="consultor"  routerLinkActive="activated-route" class="menu-item" mat-flat-button>
+          <mat-icon>support_agent</mat-icon>
+            <span class="txt_route">Consultant</span>
+        </button>
+    </mat-list>
+
+    <mat-list>
+      <button routerLink="appoinment"  routerLinkActive="activated-route" class="menu-item" mat-flat-button>
+        <mat-icon>event_note</mat-icon>
+          <span class="txt_route">Appointment</span>
+      </button>
+  </mat-list>
+            <!-- <mat-expansion-panel style="width: 95%; border-top-right-radius: 50px; border-bottom-right-radius: 50px;box-shadow: none;margin-top: 20px;">
+                <mat-expansion-panel-header>
+                    
+                  <mat-panel-title>
+                    <mat-icon>settings</mat-icon>
+                  </mat-panel-title>
+
+                  <mat-panel-description>
+                    System User
+                  </mat-panel-description>
+
+                </mat-expansion-panel-header>
+                    <button routerLink="category-management" routerLinkActive="activated-route" class="menu-item"
+                        mat-flat-button>
+                      <span class="txt_route">Category Management</span>
+                    </button>
+
+                    <button routerLink="trending-item" routerLinkActive="activated-route" class="menu-item"
+                    mat-flat-button>
+                  <span class="txt_route">Trending Item</span>
+                </button>
+      
+                    <button routerLink="customer-management" routerLinkActive="activated-route" class="menu-item"
+                        mat-flat-button>
+                      <span class="txt_route">Customer Management</span>
+                    </button>
+                    <button routerLink="foodcity-management" routerLinkActive="activated-route" class="menu-item"
+                        mat-flat-button>
+                      <span class="txt_route">Foodcity Management</span>
+                    </button>
+                    <button routerLink="bite-management" routerLinkActive="activated-route" class="menu-item"
+                        mat-flat-button>
+                      <span class="txt_route">Bite Management</span>
+                    </button>
+              </mat-expansion-panel>
+
+              <mat-expansion-panel style="width: 95%; border-top-right-radius: 50px; border-bottom-right-radius: 50px;box-shadow: none;margin-top: 20px;">
+                <mat-expansion-panel-header>
+                    
+                  <mat-panel-title>
+                    <mat-icon>list_alt</mat-icon>
+                  </mat-panel-title>
+
+                  <mat-panel-description>
+                    Appoinment
+                  </mat-panel-description>
+
+                </mat-expansion-panel-header>
+                    <button routerLink="pending-order" routerLinkActive="activated-route" class="menu-item"
+                        mat-flat-button>
+                      <span class="txt_route">Create Appoinment</span>
+                    </button>
+                    <button routerLink="approved-order" routerLinkActive="activated-route" class="menu-item"
+                        mat-flat-button>
+                      <span class="txt_route">View Appoinments</span>
+                    </button>
+                    <button routerLink="delivered-order" routerLinkActive="activated-route" class="menu-item"
+                        mat-flat-button>
+                      <span class="txt_route">Delivered Order</span>
+                    </button>
+              </mat-expansion-panel> -->
+        </mat-list>
+      <!-- <div class="div_logout">
+        <mat-list>
+          <button (click)="logoutUser()" class="menu-item"
+                  mat-flat-button>
+            <img class="menu_img" src="../../../assets/icons/logout_FILL0_wght400_GRAD0_opsz48.svg" alt="">
+
+            <span class="txt_route">Logout</span>
+          </button>
+        </mat-list>
+      </div> -->
+    </mat-sidenav>
+
+
+
+
+
+    <mat-sidenav-content class="post-login-main-side">
+        <mat-toolbar class="header-bar">
+            <!-- (click)="sidenav.toggle()"  -->
+
+            <button (click)="onMenuToggle()" mat-icon-button class="menu-icon"
+                aria-label="Example icon-button with menu icon">
+                <mat-icon>menu</mat-icon>
+            </button>
+            <span>{{activeRouter}}</span>
+            <span class="example-spacer"></span>
+            <button  mat-icon-button class="example-icon header-icon favorite-icon btn-signout" [matMenuTriggerFor]="menu">
+                <!-- <img   class="menu_img" src="../../../assets/icons/logout_FILL0_wght400_GRAD0_opsz48.svg" alt=""> -->
+                P
+            </button>
+
+            <mat-menu #menu="matMenu" style="background-color: transparent;">
+                <!-- <button mat-menu-item>
+                  <mat-icon>phone</mat-icon>
+                  <span>Contact us</span>
+                </button> -->
+            
+                <button mat-menu-item style="width: 200px;border-radius: 20px;" (click)="logoutUser()">
+                    <mat-icon>logout</mat-icon>
+                  <span>Logout</span>
+                </button>
+              </mat-menu>
+        </mat-toolbar>
+        <div class="body-area">
+            <div class="sub-body-area">
+                <router-outlet></router-outlet>
+            </div>
+        </div>
+    </mat-sidenav-content>
+</mat-sidenav-container>
